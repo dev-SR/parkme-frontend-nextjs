@@ -4,6 +4,8 @@ import { ThemeProvider } from 'next-themes';
 
 import { Roboto } from 'next/font/google';
 import NavBar from '@/components/Nav/NavBar';
+import ReactQueryProvider from '@/providers/react-query';
+import ToasterWithTheme from '@/components/ui/extended/ToasterTheme';
 
 const roboto = Roboto({
 	weight: '400',
@@ -26,8 +28,8 @@ export default function RootLayout({
 		<html lang='en' className={roboto.className}>
 			<body>
 				<ThemeProvider attribute='class' defaultTheme='system' enableSystem>
-					<NavBar />
-					{children}
+					<ToasterWithTheme />
+					<ReactQueryProvider>{children}</ReactQueryProvider>
 				</ThemeProvider>
 			</body>
 		</html>
