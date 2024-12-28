@@ -10,25 +10,24 @@ import {
 	FormLabel,
 	FormMessage
 } from '@/components/ui/form';
-import { LoginSchema, LoginSchemaType } from '@/lib/schema';
+import { LoginSchemaType } from '@/lib/schema';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useMutation } from '@tanstack/react-query';
-import api from '@/lib/axiosApi';
 import { LoginRequest, LoginResponse } from '@/lib/types/auth/login';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosErrorType, HandleAxiosError } from '@/lib/types/error/process-axios-error';
 import { LoadingSpinner } from '@/components/ui/extended/loading-spinner';
 import ListAlertDestructive from '@/components/ui/extended/ListAlertDestructive';
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
+import api from '@/lib/axiosApi';
 
 export function LoginForm() {
 	const router = useRouter();
 
 	const form = useForm<LoginSchemaType>({
-		resolver: zodResolver(LoginSchema),
+		// resolver: zodResolver(LoginSchema),
 		defaultValues: {
 			email: '',
 			password: ''
@@ -41,6 +40,7 @@ export function LoginForm() {
 			router.push(DEFAULT_LOGIN_REDIRECT);
 		},
 		onError: (error) => {
+			console.log(error);
 			const err = HandleAxiosError.process(error);
 			toast.error(err.message);
 		}

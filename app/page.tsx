@@ -1,3 +1,4 @@
+import NavigationHelperPage from '@/components/NavigationHelperPage';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
@@ -10,7 +11,7 @@ export default async function Home() {
 					<Link href={'/auth/login'}>Login</Link>
 				</Button>
 				<Link href={'/dashboard'}>Go to Dashboard</Link>
-				{/* <SessionClient /> */}
+				<NavigationHelperPage currentPage='/' />
 			</main>
 		</div>
 	);

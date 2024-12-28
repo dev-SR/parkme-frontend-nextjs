@@ -1,15 +1,10 @@
 import { LoginSchemaType } from '@/lib/schema';
+import { User } from './user';
 
 export type LoginResponse = {
 	accessToken: string;
 	refreshToken: string;
-	user: {
-		id: string;
-		email: string;
-		firstName: string;
-		lastName: string;
-		roles: string[];
-	};
+	user: User;
 };
 
 export type LoginRequest = LoginSchemaType;

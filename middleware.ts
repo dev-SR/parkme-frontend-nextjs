@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { publicRoutes, authRoutes, DEFAULT_LOGIN_REDIRECT, LOGIN_PATH } from './routes';
-// import { getSession } from "./lib/session";
+import { getSession } from './lib/session';
 /* 
 BY DEFAULT EVERY ROUTES IS PROTECTED
 [route]: `auth`, [user]: logged in ---> ⛔ deny & redirect
@@ -15,7 +15,9 @@ export default async function middleware(request: NextRequest) {
 	const isAuthRoute = authRoutes.includes(pathname);
 
 	// Simulate user authentication status (replace with actual logic)
-	const userLoggedIn = !!request.cookies.get('auth_token');
+	const session = await getSession();
+
+	const userLoggedIn = !!session?.user;
 
 	if (isPublicRoute) {
 		return NextResponse.next(); // Allow public routes for all users

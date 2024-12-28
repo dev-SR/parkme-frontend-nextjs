@@ -8,4 +8,4 @@ export const GOOGLE_PATH = '/auth/social/google';
 
 export const authRoutes = [LOGIN_PATH, REGISTER_PATH, GITHUB_PATH, GOOGLE_PATH];
 
-export const publicRoutes = ['/', '/auth/activate'];
+export const publicRoutes = ['/', '/private/server', '/private/client'];
