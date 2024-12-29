@@ -18,6 +18,7 @@ export const metadata: Metadata = {
 	description:
 		'Make your life easier with ParkMe. Find parking spots quickly and efficiently. Our app helps you locate available parking spaces in real-time, saving you time and reducing stress.'
 };
+const HEADER_HEIGHT = '4rem';
 
 export default function RootLayout({
 	children
@@ -26,7 +27,13 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang='en' className={roboto.className}>
-			<body>
+			<body
+				className='overflow-hidden'
+				style={
+					{
+						'--header-height': HEADER_HEIGHT
+					} as React.CSSProperties
+				}>
 				<ThemeProvider attribute='class' defaultTheme='system' enableSystem>
 					<ToasterWithTheme />
 					<ReactQueryProvider>{children}</ReactQueryProvider>

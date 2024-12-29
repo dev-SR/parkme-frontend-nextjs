@@ -1,0 +1,53 @@
+'use client';
+import Link from 'next/link';
+import { FaSquareParking } from 'react-icons/fa6';
+import { ToggleThemeMode } from './ui/extended/ToggleThemeMode';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
+import { Button } from './ui/button';
+const navigation = [
+	{ name: 'Features', href: '#' },
+	{ name: 'Pricing', href: '#' },
+	{ name: 'Blog', href: '#' },
+	{ name: 'About', href: '#' }
+];
+
+const Header = () => {
+	const pathname = usePathname();
+
+	return (
+		<header
+			className={cn(
+				'flex h-[--header-height]  shrink-0 items-center gap-2 px-4',
+				pathname !== '/' && ' border-b '
+			)}>
+			<Link href='/' className='flex items-center gap-2 self-center font-medium'>
+				<div className='flex p-1 items-center justify-center rounded-md bg-primary text-primary-foreground'>
+					<FaSquareParking className='size-5 text-primary-foreground' />
+				</div>
+				<span className='font-bold text-lg'>ParkMe Inc.</span>
+			</Link>
+			<div className='ml-6 grow flex items-center justify-center'>
+				<div className='flex items-center sm:gap-4 md:gap-6 lg:gap-12 '>
+					{pathname === '/' &&
+						navigation.map((item) => (
+							<Link
+								key={item.name}
+								href={item.href}
+								className='text-sm font-semibold leading-6 text-foreground/80'>
+								{item.name}
+							</Link>
+						))}
+				</div>
+			</div>
+			<div className='flex items-center gap-2'>
+				<Link href={'/auth/login'}>
+					<Button size='sm'>Login</Button>
+				</Link>
+				<ToggleThemeMode />
+			</div>
+		</header>
+	);
+};
+
+export default Header;
