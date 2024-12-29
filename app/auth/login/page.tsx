@@ -1,17 +1,18 @@
 import { FaSquareParking } from 'react-icons/fa6';
 
 import { LoginForm } from '@/components/auth/form/login-form';
+import Link from 'next/link';
 
 export default function LoginPage() {
 	return (
 		<div className='flex min-h-svh  mx-auto flex-col items-center justify-center bg-muted p-6 md:p-10'>
 			<div className='flex w-full max-w-sm flex-col gap-6'>
-				<a href='#' className='flex items-center gap-2 self-center font-medium'>
+				<Link href='/' className='flex items-center gap-2 self-center font-medium'>
 					<div className='flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground'>
 						<FaSquareParking className='size-4' />
 					</div>
 					ParkMe Inc.
-				</a>
+				</Link>
 				<LoginForm />
 			</div>
 		</div>
