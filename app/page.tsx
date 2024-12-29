@@ -48,8 +48,8 @@ export default async function Home() {
 							</p>
 							<div className='mt-10 flex items-center justify-center gap-x-6'>
 								<Link href='/search'>
-									<Button size={'lg'} className='rounded-full'>
-										<span className='text-lg font-semibold leading-6'>Find spots nearby</span>
+									<Button size={'lg'} className='rounded-full px-8 py-6'>
+										<span className='text-lg font-medium leading-6'>Find Parking Nearby</span>
 									</Button>
 								</Link>
 								<a href='#' className='text-lg font-semibold leading-6'>
