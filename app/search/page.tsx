@@ -21,7 +21,7 @@ export default function Layout() {
 					<span className='text-sm '>Filter</span>
 				</header>
 				<ScrollArea className='h-[calc(100svh-theme(spacing.4)-(var(--header-height)*2))] bg-black'>
-					{/* <MyMap /> */}
+					<MyMap />
 				</ScrollArea>
 			</SidebarInset>
 		</SidebarProvider>
