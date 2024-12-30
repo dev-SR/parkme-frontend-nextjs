@@ -10,6 +10,7 @@ interface DualRangeSliderProps extends React.ComponentProps<typeof SliderPrimiti
 	label?: (value: number | undefined) => React.ReactNode;
 }
 
+// https://shadcnui-expansions.typeart.cc/docs/dual-range-slider
 const DualRangeSlider = React.forwardRef<
 	React.ElementRef<typeof SliderPrimitive.Root>,
 	DualRangeSliderProps

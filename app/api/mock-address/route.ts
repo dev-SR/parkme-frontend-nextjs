@@ -4,5 +4,5 @@ export async function GET(request: NextRequest) {
 	const query = searchParams.get('searchInput');
 	console.log(query);
 
-	return NextResponse.json({ query });
+	return NextResponse.json({ query: query });
 }

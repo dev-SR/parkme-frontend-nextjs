@@ -6,6 +6,7 @@ const SIDEBAR_WIDTH = '20rem';
 export default function Layout() {
 	return (
 		<SidebarProvider
+			defaultOpen={false}
 			style={
 				{
 					'--sidebar-width': SIDEBAR_WIDTH,
