@@ -1,4 +1,5 @@
 import { AppSidebar } from '@/components/app-sidebar';
+import MyMap from '@/components/location/map/Map';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 const SIDEBAR_WIDTH = '20rem';
@@ -19,8 +20,8 @@ export default function Layout() {
 					<SidebarTrigger className='-ml-1' />
 					<span className='text-sm '>Filter</span>
 				</header>
-				<ScrollArea className='h-[calc(100svh-theme(spacing.4)-(var(--header-height)*2))]'>
-					Hello
+				<ScrollArea className='h-[calc(100svh-theme(spacing.4)-(var(--header-height)*2))] bg-black'>
+					{/* <MyMap /> */}
 				</ScrollArea>
 			</SidebarInset>
 		</SidebarProvider>

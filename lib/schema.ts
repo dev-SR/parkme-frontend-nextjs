@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { map, z } from 'zod';
 
 export const LoginSchema = z.object({
 	email: z.string().email('Please enter a valid email address'),
@@ -13,7 +13,14 @@ export const RegisterSchema = z.object({
 });
 
 export const FilterLocationFormSchema = z.object({
-	city: z.string(),
+	address: z.object({
+		label: z.string(),
+		mapboxId: z.string().optional(),
+		coordinates: z.object({
+			latitude: z.number(),
+			longitude: z.number()
+		})
+	}),
 	vehicleTypes: z.array(z.string()).refine((value) => value.some((item) => item), {
 		message: 'You have to select at least one item.'
 	}),

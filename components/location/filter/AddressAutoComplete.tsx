@@ -4,33 +4,26 @@ import { FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { CommandLoading, Command as CommandPrimitive } from 'cmdk';
-import { FiMapPin } from 'react-icons/fi'; // Importing the address icon
 
-import { Check, Loader2 } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { useDebounce } from '@uidotdev/usehooks';
-import {
-	Command,
-	CommandDialog,
-	CommandEmpty,
-	CommandGroup,
-	CommandList
-} from '@/components/ui/command';
+import { Command, CommandEmpty, CommandGroup, CommandList } from '@/components/ui/command';
 import { useCallback, useState } from 'react';
-import { LoadingSpinner } from '@/components/ui/extended/loading-spinner';
 import { FilterLocationFormSchemaType } from '@/lib/schema';
 import { LuMapPin } from 'react-icons/lu';
 import { Spinner } from '@/components/ui/extended/Spinner';
-import { Popover, PopoverContent } from '@/components/ui/popover';
 import mapApi from '@/lib/mapboxApi';
+import { toast } from 'sonner';
+import { SearchBoxSuggestions } from '@/lib/types/map/search';
 
-type City = {
-	value: string;
-	label: string;
-};
-const fetchCities = async (searchInput: string) => {
-	const response = await fetch(`/api/mock-address?searchInput=${searchInput}`);
-	return (await response.json()) as City[];
-};
+// type City = {
+// 	value: string;
+// 	label: string;
+// };
+// const fetchCities = async (searchInput: string) => {
+// 	const response = await fetch(`/api/mock-address?searchInput=${searchInput}`);
+// 	return (await response.json()) as City[];
+// };
 
 const AddressAutoComplete = () => {
 	const form = useFormContext<FilterLocationFormSchemaType>();
@@ -40,9 +33,11 @@ const AddressAutoComplete = () => {
 	const [retrievingGeoCode, setRetrievingGeoCode] = useState(''); // prevent fetching after item is selected
 
 	const fetchedData = useQuery({
-		queryKey: ['cities', allowedToFetch, debouncedSearchInput],
+		queryKey: ['address', allowedToFetch, debouncedSearchInput],
 		queryFn: () => mapApi.Search.getSuggestions(debouncedSearchInput),
-		enabled: allowedToFetch && !!debouncedSearchInput
+		enabled: allowedToFetch && !!debouncedSearchInput,
+		refetchOnWindowFocus: false,
+		refetchIntervalInBackground: false
 	});
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -56,13 +51,35 @@ const AddressAutoComplete = () => {
 	};
 	// console.log();
 
+	const handleOnSelect = async (loc: SearchBoxSuggestions) => {
+		setRetrievingGeoCode(loc.mapbox_id);
+
+		try {
+			const geocode = await mapApi.Search.retrieveGeocode(loc.mapbox_id);
+			form.setValue('address', {
+				label: loc.name,
+				mapboxId: loc.mapbox_id,
+				coordinates: {
+					latitude: geocode.latitude,
+					longitude: geocode.longitude
+				}
+			});
+		} catch (error) {
+			toast.error('An unexpected error occurred. Please try again later');
+		}
+		setRetrievingGeoCode('');
+
+		setAllowedToFetch(false); //stop fetching after item is selected
+		setSearchInput(loc.name);
+	};
+
 	return (
 		<FormField
 			control={form.control}
-			name='city'
+			name='address'
 			render={({ field }) => (
 				<FormItem className='flex flex-col'>
-					<FormLabel className='text-base'>Find Location</FormLabel>
+					<FormLabel className='text-base'>Search your location</FormLabel>
 					<FormDescription>Enter the address you want to get parkings at</FormDescription>
 					<Command
 						className='overflow-visible'
@@ -113,15 +130,8 @@ const AddressAutoComplete = () => {
 														className='flex select-text flex-col cursor-pointer gap-0.5 h-max p-2 px-3 rounded-md aria-selected:bg-accent aria-selected:text-accent-foreground hover:bg-accent  items-start'
 														value={loc.mapbox_id}
 														key={loc.mapbox_id}
-														onSelect={async () => {
-															setRetrievingGeoCode(loc.mapbox_id);
-															const geocode = await mapApi.Search.retrieveGeocode(loc.mapbox_id);
-															console.log(geocode);
-															setRetrievingGeoCode('');
-															setAllowedToFetch(false);
-															setSearchInput(loc.name);
-															form.setValue('city', loc.mapbox_id);
-															fetchedData.refetch({});
+														onSelect={() => {
+															handleOnSelect(loc);
 														}}
 														onMouseDown={(e) => e.preventDefault()}>
 														<div className='flex justify-between w-full'>
@@ -139,7 +149,9 @@ const AddressAutoComplete = () => {
 															<Check
 																className={cn(
 																	'ml-auto',
-																	loc.mapbox_id === field.value ? 'opacity-100' : 'opacity-0'
+																	loc.mapbox_id === field.value.mapboxId
+																		? 'opacity-100'
+																		: 'opacity-0'
 																)}
 															/>
 														</div>
