@@ -1,13 +1,6 @@
 import Header from '@/components/app-heading';
-import NavigationHelperPage from '@/components/NavigationHelperPage';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-const navigation = [
-	{ name: 'Product', href: '#' },
-	{ name: 'Features', href: '#' },
-	{ name: 'Marketplace', href: '#' },
-	{ name: 'Company', href: '#' }
-];
+
+import GoToSearchButton from '@/components/ui/extended/GoToSearchButton';
 
 export default async function Home() {
 	return (
@@ -16,6 +9,7 @@ export default async function Home() {
 			<div>
 				<div className='relative isolate'>
 					<Header />
+
 					<div
 						className='absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80'
 						aria-hidden='true'>
@@ -27,8 +21,8 @@ export default async function Home() {
 							}}
 						/>
 					</div>
-					<div className='mx-auto max-w-3xl py-16 sm:py-24 lg:py-30'>
-						<div className='hidden sm:mb-8 sm:flex sm:justify-center'>
+					<div className='mx-auto max-w-3xl py-16 sm:py-24 lg:py-30 '>
+						<div className='hidden sm:mb-8 sm:flex sm:justify-center rollin-animation'>
 							<div className='relative rounded-full px-3 py-1 text-sm leading-6 text-muted-foreground ring-1 ring-foreground/30 hover:ring-foreground'>
 								Announcing our next round of features.{' '}
 								<a href='#' className='font-semibold text-primary'>
@@ -38,20 +32,16 @@ export default async function Home() {
 							</div>
 						</div>
 						<div className='text-center'>
-							<h1 className='text-4xl font-bold tracking-tight max-w-2xl mx-auto sm:text-6xl'>
+							<h1 className='text-4xl font-bold tracking-tight max-w-2xl mx-auto sm:text-6xl focus-animation '>
 								Seamless Parking, Stress-Free Life
 							</h1>
-							<p className='mt-6 text-lg leading-8 text-muted-foreground'>
+							<p className='mt-6 text-lg leading-8 text-muted-foreground rollin-animation'>
 								Make your life easier with ParkMe. Find parking spots quickly and efficiently. Our
 								service helps you locate available parking spaces in real-time, saving you time and
 								reducing stress.
 							</p>
-							<div className='mt-10 flex items-center justify-center gap-x-6'>
-								<Link href='/search'>
-									<Button size={'lg'} className='rounded-full px-8 py-6'>
-										<span className='text-lg font-medium leading-6'>Find Parking Nearby</span>
-									</Button>
-								</Link>
+							<div className='mt-10 flex items-center justify-center gap-x-6 focus-animation '>
+								<GoToSearchButton />
 								<a href='#' className='text-lg font-semibold leading-6'>
 									Learn more <span aria-hidden='true'>→</span>
 								</a>
