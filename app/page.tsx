@@ -1,4 +1,5 @@
 import Header from '@/components/app-heading';
+import { BottomEffects, TopEffects } from '@/components/ui/extended/Effects';
 
 import GoToSearchButton from '@/components/ui/extended/GoToSearchButton';
 
@@ -9,18 +10,7 @@ export default async function Home() {
 			<div>
 				<div className='relative isolate'>
 					<Header />
-
-					<div
-						className='absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80'
-						aria-hidden='true'>
-						<div
-							className='relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#80ff82] to-[#09c990] dark:from-[#039b05] dark:to-[#065f10] opacity-30 sm:left-[calc(50%-40rem)] sm:w-[72.1875rem]'
-							style={{
-								clipPath:
-									'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)'
-							}}
-						/>
-					</div>
+					<TopEffects />
 					<div className='mx-auto max-w-3xl py-16 sm:py-24 lg:py-30 '>
 						<div className='hidden sm:mb-8 sm:flex sm:justify-center rollin-animation'>
 							<div className='relative rounded-full px-3 py-1 text-sm leading-6 text-muted-foreground ring-1 ring-foreground/30 hover:ring-foreground'>
@@ -48,17 +38,7 @@ export default async function Home() {
 							</div>
 						</div>
 					</div>
-					<div
-						className='absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-35rem)]'
-						aria-hidden='true'>
-						<div
-							className='relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#b9ff80] to-[#93fc89] dark:from-[#027634] dark:to-[#0b8944] opacity-30 sm:left-[calc(50%+20rem)] sm:w-[72.1875rem]'
-							style={{
-								clipPath:
-									'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)'
-							}}
-						/>
-					</div>
+					<BottomEffects />
 				</div>
 			</div>
 		</>
