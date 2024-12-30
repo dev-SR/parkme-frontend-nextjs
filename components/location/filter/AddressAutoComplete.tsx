@@ -21,6 +21,7 @@ import { FilterLocationFormSchemaType } from '@/lib/schema';
 import { LuMapPin } from 'react-icons/lu';
 import { Spinner } from '@/components/ui/extended/Spinner';
 import { Popover, PopoverContent } from '@/components/ui/popover';
+import mapApi from '@/lib/mapboxApi';
 
 type City = {
 	value: string;
@@ -34,12 +35,13 @@ const fetchCities = async (searchInput: string) => {
 const AddressAutoComplete = () => {
 	const form = useFormContext<FilterLocationFormSchemaType>();
 	const [searchInput, setSearchInput] = useState('');
-	const debouncedSearchInput = useDebounce(searchInput, 500);
+	const debouncedSearchInput = useDebounce(searchInput, 1000);
 	const [allowedToFetch, setAllowedToFetch] = useState(true); // prevent fetching after item is selected
+	const [retrievingGeoCode, setRetrievingGeoCode] = useState(''); // prevent fetching after item is selected
 
 	const fetchedData = useQuery({
 		queryKey: ['cities', allowedToFetch, debouncedSearchInput],
-		queryFn: () => fetchCities(debouncedSearchInput),
+		queryFn: () => mapApi.Search.getSuggestions(debouncedSearchInput),
 		enabled: allowedToFetch && !!debouncedSearchInput
 	});
 	const [isOpen, setIsOpen] = useState(false);
@@ -62,7 +64,10 @@ const AddressAutoComplete = () => {
 				<FormItem className='flex flex-col'>
 					<FormLabel className='text-base'>Find Location</FormLabel>
 					<FormDescription>Enter the address you want to get parkings at</FormDescription>
-					<Command className='overflow-visible'>
+					<Command
+						className='overflow-visible'
+						shouldFilter={false} //
+					>
 						<div className='flex w-full items-center justify-between rounded-lg border bg-background ring-offset-background text-sm focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2'>
 							<span className='pl-3'>
 								<LuMapPin className='size-4' />
@@ -103,24 +108,38 @@ const AddressAutoComplete = () => {
 									{fetchedData.data && (
 										<div className='absolute top-1.5 z-50 w-full'>
 											<CommandGroup className='relative h-auto z-50 min-w-[8rem] overflow-hidden rounded-md border shadow-md bg-background'>
-												{fetchedData.data?.map((city) => (
+												{fetchedData.data?.map((loc) => (
 													<CommandPrimitive.Item
-														className='flex select-text flex-col cursor-pointer gap-0.5 h-max p-2 px-3 rounded-md aria-selected:bg-accent aria-selected:text-accent-foreground hover:bg-accent hover:text-accent-foreground items-start'
-														value={city.label}
-														key={city.value}
-														onSelect={() => {
+														className='flex select-text flex-col cursor-pointer gap-0.5 h-max p-2 px-3 rounded-md aria-selected:bg-accent aria-selected:text-accent-foreground hover:bg-accent  items-start'
+														value={loc.mapbox_id}
+														key={loc.mapbox_id}
+														onSelect={async () => {
+															setRetrievingGeoCode(loc.mapbox_id);
+															const geocode = await mapApi.Search.retrieveGeocode(loc.mapbox_id);
+															console.log(geocode);
+															setRetrievingGeoCode('');
 															setAllowedToFetch(false);
-															setSearchInput(city.label);
-															form.setValue('city', city.value);
+															setSearchInput(loc.name);
+															form.setValue('city', loc.mapbox_id);
 															fetchedData.refetch({});
 														}}
 														onMouseDown={(e) => e.preventDefault()}>
 														<div className='flex justify-between w-full'>
-															{city.label}
+															<div>
+																{retrievingGeoCode && loc.mapbox_id === retrievingGeoCode && (
+																	<Spinner size='small' className='mr-2' />
+																)}
+															</div>
+															<div className='flex flex-col flex-1 '>
+																<p className='font-semibold text-xs'>{loc.name}</p>
+																<p className='text-xs text-muted-foreground'>
+																	{loc.place_formatted}
+																</p>
+															</div>
 															<Check
 																className={cn(
 																	'ml-auto',
-																	city.value === field.value ? 'opacity-100' : 'opacity-0'
+																	loc.mapbox_id === field.value ? 'opacity-100' : 'opacity-0'
 																)}
 															/>
 														</div>
