@@ -22,9 +22,7 @@ const Header = () => {
 				pathname !== '/' && ' border-b '
 			)}>
 			<Link href='/' className='flex items-center gap-2 self-center font-medium'>
-				<div className='flex p-1 items-center justify-center rounded-md bg-primary text-primary-foreground'>
-					<FaSquareParking className='size-5 text-primary-foreground' />
-				</div>
+				<FaSquareParking className='size-8 text-primary' />
 				<span className='font-bold text-lg'>ParkMe Inc.</span>
 			</Link>
 			<div className='ml-6 grow flex items-center justify-center'>

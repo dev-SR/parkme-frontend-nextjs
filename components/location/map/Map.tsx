@@ -1,125 +1,98 @@
 'use client';
-import { DistrictGeocode } from '@/lib/geo-data/districts';
 import { useTheme } from 'next-themes';
-import { useMemo, useRef, useState } from 'react';
-import { LuMapPin } from 'react-icons/lu';
+import { useCallback, useState } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css'; //MUST
 import Map, {
 	FullscreenControl,
-	GeoJSONSource,
 	GeolocateControl,
-	MapRef,
-	Marker,
 	NavigationControl,
-	Popup,
-	ScaleControl
+	ViewStateChangeEvent
 } from 'react-map-gl';
-import { BBox, GeoJsonProperties } from 'geojson';
-import useSupercluster from 'use-supercluster';
-import Supercluster, { PointFeature } from 'supercluster';
+
+import { MapPanel } from './MapPanel';
+import { Button } from '@/components/ui/button';
+import { Filter } from 'lucide-react';
+import ShowParkingMarkers from './ShowParkingMarkers';
+import { INITIAL_VIEW_STATE } from '@/lib/constants';
+import {
+	Sheet,
+	SheetContent,
+	SheetDescription,
+	SheetHeader,
+	SheetTitle,
+	SheetTrigger
+} from '@/components/ui/sheet';
+import PricePerHourSlider from '../filter/PricePerHourSlider';
+import VehicleTypeMultiSelect from '../filter/VehicleTypeMultiSelect';
+import AddressAutoComplete from '../filter/AddressAutoComplete';
+import YourLocationMarker from './YourLocationMarker';
+import { useFormContext } from 'react-hook-form';
+import { FilterLocationFormSchemaType } from '@/lib/schema';
+import LoadingMarkers from './LoadingMarkers';
+import GetUserLocation from './GetUserLocation';
 
 const MyMap = () => {
 	const { theme } = useTheme();
-	const [viewState, setViewState] = useState({
-		longitude: 90.42,
-		latitude: 23.739,
-		zoom: 12
-	});
-	const [popupInfo, setPopupInfo] = useState<any>(null);
-	const mapRef = useRef<MapRef>(null);
+	const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
+	const form = useFormContext<FilterLocationFormSchemaType>();
 
-	const bounds = mapRef.current ? mapRef.current.getMap().getBounds()?.toArray().flat() : null;
-	const points = DistrictGeocode.map((district) => ({
-		type: 'Feature',
-		properties: { cluster: false, ...district },
-		geometry: {
-			type: 'Point',
-			coordinates: [parseFloat(district.lon), parseFloat(district.lat)]
-		}
-	}));
+	const handleMapChange = useCallback((target: ViewStateChangeEvent['target']) => {
+		const bounds = target.getBounds();
+		const locationFilter = {
+			ne_lat: bounds?.getNorthEast().lat || 0,
+			ne_lng: bounds?.getNorthEast().lng || 0,
+			sw_lat: bounds?.getSouthWest().lat || 0,
+			sw_lng: bounds?.getSouthWest().lng || 0
+		};
 
-	const { clusters, supercluster } = useSupercluster({
-		points: points as any,
-		bounds: bounds as any,
-		zoom: viewState.zoom,
-		options: { radius: 75, maxZoom: 20 }
-		//     disableRefresh: isFetching
-	});
+		form.setValue('bounds', locationFilter);
+	}, []);
 
 	return (
 		<Map
-			ref={mapRef}
+			mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
 			{...viewState}
 			onMove={(evt) => setViewState(evt.viewState)}
-			mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
-			style={{ width: '90vw', height: '80vh' }}
+			style={{ height: 'calc(100vh - 4rem)' }}
+			// scrollZoom={false}
 			mapStyle={
 				theme === 'light' ? 'mapbox://styles/mapbox/light-v11' : 'mapbox://styles/mapbox/dark-v11'
-			}>
-			<GeolocateControl position='top-left' />
-			<FullscreenControl position='top-left' />
-			<NavigationControl position='top-left' />
+			}
+			onLoad={(e) => handleMapChange(e.target)}
+			onDragEnd={(e) => handleMapChange(e.target)}
+			onZoomEnd={(e) => handleMapChange(e.target)}>
+			<GeolocateControl position='bottom-right' />
+			<FullscreenControl position='bottom-right' />
+			<NavigationControl position='bottom-right' />
 
-			{clusters.map((cluster, i) => {
-				const [longitude, latitude] = cluster.geometry.coordinates;
-				const isCluster = cluster.properties?.cluster;
-				const pointCount = cluster.properties?.point_count;
+			<ShowParkingMarkers />
+			<YourLocationMarker />
+			<GetUserLocation />
 
-				if (isCluster) {
-					return (
-						<Marker key={cluster.id} longitude={longitude} latitude={latitude}>
-							<div
-								style={{
-									width: `${10 + (pointCount / 11) * 10}px`,
-									height: `${10 + (pointCount / 11) * 10}px`
-								}}
-								className='flex items-center justify-center rounded-full bg-primary text-foreground text-lg font-semibold p-4 hover:cursor-pointer'
-								onClick={() => {
-									const expandedZoom = supercluster
-										? Math.min(supercluster.getClusterExpansionZoom(Number(cluster.id)), 20)
-										: viewState.zoom;
+			<MapPanel position='right-top'>
+				<Sheet>
+					<SheetTrigger className='bg-primary rounded p-1 text-primary-foreground'>
+						<Filter className='size-5' />
+					</SheetTrigger>
+					<SheetContent className='w-[400px] sm:w-[540px]'>
+						<SheetHeader className='mb-6'>
+							<SheetTitle>Apply Filters</SheetTitle>
+							<SheetDescription>Narrow down your search</SheetDescription>
+						</SheetHeader>
+						<form className='space-y-4'>
+							<VehicleTypeMultiSelect />
+							<PricePerHourSlider />
+						</form>
+					</SheetContent>
+				</Sheet>
+			</MapPanel>
 
-									mapRef.current?.easeTo({
-										center: [longitude, latitude],
-										zoom: expandedZoom,
-										duration: 300
-									});
-								}}>
-								{pointCount}
-							</div>
-						</Marker>
-					);
-				}
-
-				return (
-					<Marker
-						anchor='bottom'
-						key={cluster.properties?.id}
-						longitude={longitude}
-						latitude={latitude}
-						onClick={(e) => {
-							// If we let the click event propagates to the map, it will immediately close the popup
-							// with `closeOnClick: true`
-							e.originalEvent.stopPropagation();
-							setPopupInfo(cluster.properties);
-						}}>
-						<LuMapPin className='text-primary size-8' />
-					</Marker>
-				);
-			})}
-
-			{popupInfo && (
-				<Popup
-					anchor='top'
-					longitude={Number(popupInfo.lon)}
-					latitude={Number(popupInfo.lat)}
-					onClose={() => setPopupInfo(null)}
-					className='bg-background text-foreground'>
-					<div>
-						<h3>{popupInfo.name}</h3>
-					</div>
-				</Popup>
-			)}
+			<MapPanel position='left-top'>
+				<AddressAutoComplete />
+			</MapPanel>
+			<MapPanel position='center-center'>
+				<LoadingMarkers />
+			</MapPanel>
 		</Map>
 	);
 };

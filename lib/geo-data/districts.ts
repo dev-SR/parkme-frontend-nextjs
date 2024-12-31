@@ -1,3 +1,12 @@
+export type DistrictGeocodeType = {
+	id: string;
+	division_id: string;
+	name: string;
+	bn_name: string;
+	lat: string;
+	lon: string;
+	url: string;
+};
 export const DistrictGeocode = [
 	{
 		id: '1',

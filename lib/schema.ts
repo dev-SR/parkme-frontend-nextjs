@@ -14,17 +14,26 @@ export const RegisterSchema = z.object({
 
 export const FilterLocationFormSchema = z.object({
 	address: z.object({
-		label: z.string(),
+		label: z.string().optional(),
 		mapboxId: z.string().optional(),
-		coordinates: z.object({
-			latitude: z.number(),
-			longitude: z.number()
-		})
+		coordinates: z
+			.object({
+				latitude: z.number(),
+				longitude: z.number()
+			})
+			.optional()
 	}),
+	bounds: z
+		.object({
+			ne_lat: z.number(),
+			ne_lng: z.number(),
+			sw_lat: z.number(),
+			sw_lng: z.number()
+		})
+		.optional(),
 	vehicleTypes: z.array(z.string()).refine((value) => value.some((item) => item), {
 		message: 'You have to select at least one item.'
 	}),
-	start_time: z.date(),
 	price_per_hour_range: z.array(z.number())
 });
 

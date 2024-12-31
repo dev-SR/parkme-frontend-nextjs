@@ -9,7 +9,7 @@ import {
 	SidebarRail
 } from '@/components/ui/sidebar';
 
-import FilterForm from './location/filter/FilterForm';
+import FilterForm from './location/filter/FilterFormProvider';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	return (
