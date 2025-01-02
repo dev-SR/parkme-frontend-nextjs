@@ -3,7 +3,7 @@
 import { Spinner } from '@/components/ui/extended/Spinner';
 import { useParkingMarkerData } from '@/hooks/map/useParkingMarkerData';
 
-const LoadingMarkers = () => {
+const LoadingMarker = () => {
 	const { isFetching } = useParkingMarkerData();
 	return (
 		isFetching && (
@@ -15,4 +15,4 @@ const LoadingMarkers = () => {
 	);
 };
 
-export default LoadingMarkers;
+export default LoadingMarker;

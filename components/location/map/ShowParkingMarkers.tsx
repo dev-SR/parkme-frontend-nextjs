@@ -10,15 +10,15 @@ const ShowParkingMarkers = () => {
 	const mapRef = useMap();
 	const bounds = mapRef.current ? mapRef.current.getBounds()?.toArray().flat() : null;
 
-	const { data, isFetching } = useParkingMarkerData();
+	const { data, isError } = useParkingMarkerData();
 
 	const points = data
-		? data.map((district) => ({
+		? data.map((lots) => ({
 				type: 'Feature',
-				properties: { cluster: false, ...district },
+				properties: { cluster: false, ...lots },
 				geometry: {
 					type: 'Point',
-					coordinates: [parseFloat(district.lon), parseFloat(district.lat)]
+					coordinates: [lots.longitude, lots.latitude]
 				}
 		  }))
 		: [];
@@ -59,10 +59,10 @@ const ShowParkingMarkers = () => {
 					}}>
 					<div
 						style={{
-							width: `${10 + (pointCount / 7) * 20}px`,
-							height: `${10 + (pointCount / 7) * 20}px`
+							width: `${30 + (pointCount / 7) * 20}px`,
+							height: `${30 + (pointCount / 7) * 20}px`
 						}}
-						className='flex items-center justify-center rounded-full bg-primary text-accent-foreground text-lg font-semibold p-4 hover:cursor-pointer'>
+						className='flex items-center justify-center rounded-full bg-primary text-primary-foreground text-lg font-semibold p-4 hover:cursor-pointer'>
 						{pointCount}
 					</div>
 				</Marker>

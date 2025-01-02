@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from 'next-themes';
 
-import { Roboto } from 'next/font/google';
+import { Nunito } from 'next/font/google';
 import NavBar from '@/components/Nav/NavBar';
 import ReactQueryProvider from '@/providers/react-query';
 import ToasterWithTheme from '@/components/ui/extended/ToasterTheme';
 
-const roboto = Roboto({
+const font = Nunito({
 	weight: '400',
 	subsets: ['latin'],
 	display: 'swap'
@@ -26,7 +26,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang='en' className={roboto.className}>
+		<html lang='en' className={font.className}>
 			<body
 				className='overflow-hidden'
 				style={

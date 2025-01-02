@@ -1,10 +1,11 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { FilterLocationFormSchemaType } from '@/lib/schema';
 import React, { useEffect } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
-import { LuMapPin } from 'react-icons/lu';
-import { Marker, useMap } from 'react-map-gl';
+import { useFormContext } from 'react-hook-form';
+import { FaLocationCrosshairs } from 'react-icons/fa6';
+import { useMap } from 'react-map-gl';
 import { toast } from 'sonner';
 
 const GetUserLocation: React.FC = () => {
@@ -51,7 +52,11 @@ const GetUserLocation: React.FC = () => {
 		handleGetLocation();
 	}, []);
 
-	return null;
+	return (
+		<Button className='rounded p-0  size-[29px]' onClick={handleGetLocation}>
+			<FaLocationCrosshairs className='' />
+		</Button>
+	);
 };
 
 export default GetUserLocation;

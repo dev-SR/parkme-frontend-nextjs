@@ -7,6 +7,7 @@ export type DistrictGeocodeType = {
 	lon: string;
 	url: string;
 };
+
 export const DistrictGeocode = [
 	{
 		id: '1',

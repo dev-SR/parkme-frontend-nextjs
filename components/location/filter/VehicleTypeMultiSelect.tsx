@@ -9,28 +9,28 @@ import { FilterLocationFormSchemaType } from '@/lib/schema';
 
 const vehicleType = [
 	{
-		key: 'car',
-		label: 'Car',
+		key: 'CAR',
+		label: 'CAR',
 		icon: <FaCar className='size-8' />
 	},
 	{
-		key: 'motorcycle',
-		label: 'Motorcycle',
+		key: 'MOTORCYCLE',
+		label: 'MOTORCYCLE',
 		icon: <FaMotorcycle className='size-8' />
 	},
 	{
-		key: 'truck',
-		label: 'Truck',
+		key: 'TRUCK',
+		label: 'TRUCk',
 		icon: <FaTruck className='size-8' />
 	},
 	{
-		key: 'bus',
-		label: 'Bus',
+		key: 'BUS',
+		label: 'bUS',
 		icon: <FaBus className='size-8' />
 	},
 	{
-		key: 'bicycle',
-		label: 'Bicycle',
+		key: 'BICYCLE',
+		label: 'bICYCLE',
 		icon: <FaBicycle className='size-8' />
 	}
 ];

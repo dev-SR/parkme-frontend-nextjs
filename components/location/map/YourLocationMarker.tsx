@@ -20,7 +20,11 @@ const YourLocationMarker = () => {
 					// with `closeOnClick: true`
 					e.originalEvent.stopPropagation();
 				}}>
-				<RiUserLocationFill className='text-blue-400 size-8' />
+				<div className='size-8 text-blue-400 relative flex'>
+					<span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75'></span>
+
+					<RiUserLocationFill className='size-8' />
+				</div>
 			</Marker>
 		)
 	);

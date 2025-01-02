@@ -38,5 +38,6 @@ export const FilterLocationFormSchema = z.object({
 });
 
 export type FilterLocationFormSchemaType = z.infer<typeof FilterLocationFormSchema>;
+
 export type LoginSchemaType = z.infer<typeof LoginSchema>;
 export type RegisterSchemaType = z.infer<typeof RegisterSchema>;

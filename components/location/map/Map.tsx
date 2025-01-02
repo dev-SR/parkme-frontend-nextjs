@@ -1,11 +1,13 @@
 'use client';
 import { useTheme } from 'next-themes';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css'; //MUST
 import Map, {
 	FullscreenControl,
 	GeolocateControl,
+	MapRef,
 	NavigationControl,
+	useMap,
 	ViewStateChangeEvent
 } from 'react-map-gl';
 
@@ -28,8 +30,10 @@ import AddressAutoComplete from '../filter/AddressAutoComplete';
 import YourLocationMarker from './YourLocationMarker';
 import { useFormContext } from 'react-hook-form';
 import { FilterLocationFormSchemaType } from '@/lib/schema';
-import LoadingMarkers from './LoadingMarkers';
+import LoadingMarkers from './LoadingMarker';
 import GetUserLocation from './GetUserLocation';
+import ErrorMarker from './ErrorMarker';
+import { FaLocationDot } from 'react-icons/fa6';
 
 const MyMap = () => {
 	const { theme } = useTheme();
@@ -48,12 +52,16 @@ const MyMap = () => {
 		form.setValue('bounds', locationFilter);
 	}, []);
 
+	const mapRef = useRef<MapRef>(null);
+
 	return (
 		<Map
+			ref={mapRef}
 			mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
 			{...viewState}
 			onMove={(evt) => setViewState(evt.viewState)}
-			style={{ height: 'calc(100vh - 4rem)' }}
+			style={{ height: 'calc(100vh - 9rem)' }}
+			// style={{ height: '100%' }}
 			// scrollZoom={false}
 			mapStyle={
 				theme === 'light' ? 'mapbox://styles/mapbox/light-v11' : 'mapbox://styles/mapbox/dark-v11'
@@ -61,13 +69,28 @@ const MyMap = () => {
 			onLoad={(e) => handleMapChange(e.target)}
 			onDragEnd={(e) => handleMapChange(e.target)}
 			onZoomEnd={(e) => handleMapChange(e.target)}>
-			<GeolocateControl position='bottom-right' />
+			{/* <GeolocateControl
+				position='bottom-right'
+				onGeolocate={(e) => {
+					const { longitude, latitude } = e.coords;
+					console.log(longitude, latitude, mapRef.current);
+
+					mapRef.current?.easeTo({
+						center: {
+							lng: longitude,
+							lat: latitude
+						}
+					});
+				}}
+			/> */}
 			<FullscreenControl position='bottom-right' />
 			<NavigationControl position='bottom-right' />
 
 			<ShowParkingMarkers />
 			<YourLocationMarker />
-			<GetUserLocation />
+			<div className={`absolute space-y-2 p-2 bottom-40 right-[2px] flex flex-col items-start`}>
+				<GetUserLocation />
+			</div>
 
 			<MapPanel position='right-top'>
 				<Sheet>
@@ -92,6 +115,9 @@ const MyMap = () => {
 			</MapPanel>
 			<MapPanel position='center-center'>
 				<LoadingMarkers />
+			</MapPanel>
+			<MapPanel position='center-center'>
+				<ErrorMarker />
 			</MapPanel>
 		</Map>
 	);

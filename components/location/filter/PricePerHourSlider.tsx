@@ -29,8 +29,8 @@ const PricePerHourSlider = () => {
 								label={(value) => <span>{value}৳</span>}
 								value={field.value}
 								onValueChange={field.onChange}
-								min={0}
-								max={100}
+								min={100}
+								max={500}
 								step={1}
 							/>
 						</div>

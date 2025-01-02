@@ -1,23 +1,24 @@
 'use client';
+import api from '@/lib/axiosApi';
 import { DistrictGeocodeType } from '@/lib/geo-data/districts';
 import { FilterLocationFormSchemaType } from '@/lib/schema';
 import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from '@uidotdev/usehooks';
 import { useWatch } from 'react-hook-form';
 
-const fetchFilteredData = async (filters: FilterLocationFormSchemaType) => {
-	const response = await fetch('/api/search', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(filters)
-	});
-	if (!response.ok) {
-		throw new Error('Error fetching data');
-	}
-	return (await response.json()) as DistrictGeocodeType[];
-};
+// const fetchFilteredData = async (filters: FilterLocationFormSchemaType) => {
+// 	const response = await fetch('/api/search', {
+// 		method: 'POST',
+// 		headers: {
+// 			'Content-Type': 'application/json'
+// 		},
+// 		body: JSON.stringify(filters)
+// 	});
+// 	if (!response.ok) {
+// 		throw new Error('Error fetching data');
+// 	}
+// 	return (await response.json()) as DistrictGeocodeType[];
+// };
 
 export const useParkingMarkerData = () => {
 	const formData = useWatch<FilterLocationFormSchemaType>();
@@ -35,20 +36,19 @@ export const useParkingMarkerData = () => {
             
         */
 		queryFn: () =>
-			fetchFilteredData({
+			api.ParkingLots.getNearbyParkingLots({
 				vehicleTypes: formData.vehicleTypes!,
-				price_per_hour_range: formData.price_per_hour_range!,
-				address: {
-					label: formData.address?.label,
-					mapboxId: formData.address?.mapboxId,
-					coordinates: {
-						latitude: formData.address?.coordinates?.latitude!,
-						longitude: formData.address?.coordinates?.longitude!
-					}
+				pricePerHourRange: formData.price_per_hour_range!,
+				bounds: {
+					neLat: formData.bounds?.ne_lat!,
+					neLng: formData.bounds?.ne_lng!,
+					swLat: formData.bounds?.sw_lat!,
+					swLng: formData.bounds?.sw_lng!
 				}
 			}),
-		enabled: !!formData.address?.coordinates?.longitude,
+		enabled: !!formData.bounds,
 		refetchOnWindowFocus: false,
-		refetchIntervalInBackground: false
+		refetchIntervalInBackground: false,
+		retry: 0
 	});
 };

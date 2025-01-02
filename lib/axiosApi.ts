@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { LoginRequest, LoginResponse } from './types/auth/login';
+import { FilterLocationFormSchemaType } from './schema';
+import { FindNeaByParkingLotsRequestBody, FindNeaByParkingLotsResponse } from './types/map/search';
 
 const axiosBaseToApi = axios.create({
 	baseURL: process.env.NEXT_PUBLIC_BASE_URL,
@@ -61,8 +63,16 @@ const Auth = {
 	getProfile: () => toApiRoute.get<LoginResponse>('/api/auth/current-user')
 };
 
+const ParkingLots = {
+	getNearbyParkingLots: (values: FindNeaByParkingLotsRequestBody) =>
+		toApiRoute.post<FindNeaByParkingLotsResponse>('/api/parking-lot/search', values),
+	_getNearbyParkingLots: (values: FindNeaByParkingLotsRequestBody) =>
+		toBackend.post<FindNeaByParkingLotsResponse>('/api/parking-lot/search', values)
+};
+
 const api = {
-	Auth
+	Auth,
+	ParkingLots
 };
 
 export default api;
