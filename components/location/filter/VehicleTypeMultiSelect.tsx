@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
 
 import { FilterLocationFormSchemaType } from '@/lib/schema';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const vehicleType = [
 	{
@@ -20,17 +21,17 @@ const vehicleType = [
 	},
 	{
 		key: 'TRUCK',
-		label: 'TRUCk',
+		label: 'TRUCK',
 		icon: <FaTruck className='size-8' />
 	},
 	{
 		key: 'BUS',
-		label: 'bUS',
+		label: 'BUS',
 		icon: <FaBus className='size-8' />
 	},
 	{
 		key: 'BICYCLE',
-		label: 'bICYCLE',
+		label: 'BICYCLE',
 		icon: <FaBicycle className='size-8' />
 	}
 ];
@@ -60,20 +61,27 @@ const VehicleTypeMultiSelect = () => {
 								name='vehicleTypes'
 								render={({ field }) => {
 									return (
-										<Card
-											key={item.key}
-											className={cn(
-												'text-primary border-2 rounded-none cursor-pointer hover:bg-primary-foreground p-0',
-												field.value?.includes(item.key) && ' border-primary'
-											)}
-											onClick={() => {
-												const newItems = field.value?.includes(item.key)
-													? field.value?.filter((value) => value !== item.key)
-													: [...field.value, item.key];
-												field.onChange(newItems);
-											}}>
-											<CardContent className='p-2'>{item.icon}</CardContent>
-										</Card>
+										<TooltipProvider>
+											<Tooltip>
+												<TooltipTrigger>
+													<Card
+														key={item.key}
+														className={cn(
+															'text-primary border-2 rounded-none cursor-pointer hover:bg-accent p-0',
+															field.value?.includes(item.key) && ' border-primary'
+														)}
+														onClick={() => {
+															const newItems = field.value?.includes(item.key)
+																? field.value?.filter((value) => value !== item.key)
+																: [...field.value, item.key];
+															field.onChange(newItems);
+														}}>
+														<CardContent className='p-2'>{item.icon}</CardContent>
+													</Card>
+												</TooltipTrigger>
+												<TooltipContent>{item.label}</TooltipContent>
+											</Tooltip>
+										</TooltipProvider>
 									);
 								}}
 							/>

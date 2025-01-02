@@ -23,7 +23,7 @@ const Header = () => {
 			)}>
 			<Link href='/' className='flex items-center gap-2 self-center font-medium'>
 				<FaSquareParking className='size-8 text-primary' />
-				<span className='font-bold text-lg'>ParkMe Inc.</span>
+				<span className='font-bold text-lg text-foreground/70'>ParkMe Inc.</span>
 			</Link>
 			<div className='ml-6 grow flex items-center justify-center'>
 				<div className='flex items-center sm:gap-4 md:gap-6 lg:gap-12 '>
@@ -32,7 +32,7 @@ const Header = () => {
 							<Link
 								key={item.name}
 								href={item.href}
-								className='text-sm font-semibold leading-6 text-foreground/80'>
+								className='text-sm font-semibold leading-6 text-foreground/60'>
 								{item.name}
 							</Link>
 						))}

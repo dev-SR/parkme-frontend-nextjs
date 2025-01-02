@@ -8,10 +8,8 @@ const GoToSearchButton = () => {
 	return (
 		<motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
 			<Link href='/search'>
-				<Button
-					size={'lg'}
-					className='rounded-full px-8 py-6 text-[1.1rem] bg-primary dark:bg-primary/35  hover:bg-primary/80 ark:hover:bg-primary/60 border border-primary text-primary-foreground dark:text-foreground'>
-					<LuMapPin />
+				<Button className='rounded-full px-8 py-6 text-[1.1rem] bg-primary dark:bg-primary/35  hover:bg-primary/80 ark:hover:bg-primary/60 border border-primary text-primary-foreground dark:text-foreground'>
+					<LuMapPin className='size-8 animate-bounce' />
 					<span className=''>Find Parking Nearby</span>
 				</Button>
 			</Link>

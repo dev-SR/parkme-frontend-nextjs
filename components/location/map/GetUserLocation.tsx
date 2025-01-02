@@ -53,7 +53,7 @@ const GetUserLocation: React.FC = () => {
 	}, []);
 
 	return (
-		<Button className='rounded p-0  size-[29px]' onClick={handleGetLocation}>
+		<Button className='rounded p-0 shadow-md size-[29px]' onClick={handleGetLocation}>
 			<FaLocationCrosshairs className='' />
 		</Button>
 	);

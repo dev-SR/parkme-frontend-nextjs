@@ -62,7 +62,7 @@ const ShowParkingMarkers = () => {
 							width: `${30 + (pointCount / 7) * 20}px`,
 							height: `${30 + (pointCount / 7) * 20}px`
 						}}
-						className='flex items-center justify-center rounded-full bg-primary text-primary-foreground text-lg font-semibold p-4 hover:cursor-pointer'>
+						className='flex items-center justify-center rounded-full bg-primary text-primary-foreground text-lg font-semibold p-4 hover:cursor-pointers hadow-md'>
 						{pointCount}
 					</div>
 				</Marker>
@@ -75,14 +75,14 @@ const ShowParkingMarkers = () => {
 				key={cluster.properties?.id}
 				longitude={longitude}
 				latitude={latitude}
-				className='cursor-pointer'
+				className='cursor-pointer shadow-md'
 				onClick={(e) => {
 					// If we let the click event propagates to the map, it will immediately close the popup
 					// with `closeOnClick: true`
 					e.originalEvent.stopPropagation();
 					toast.info(JSON.stringify(cluster.properties));
 				}}>
-				<FaSquareParking className='size-7 text-primary' />
+				<FaSquareParking className='size-7 text-primary ' />
 			</Marker>
 		);
 	});

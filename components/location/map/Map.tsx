@@ -88,13 +88,13 @@ const MyMap = () => {
 
 			<ShowParkingMarkers />
 			<YourLocationMarker />
-			<div className={`absolute space-y-2 p-2 bottom-40 right-[2px] flex flex-col items-start`}>
+			<div className={`absolute space-y-2 p-2 bottom-40 right-[2px] flex flex-col items-start `}>
 				<GetUserLocation />
 			</div>
 
 			<MapPanel position='right-top'>
 				<Sheet>
-					<SheetTrigger className='bg-primary rounded p-1 text-primary-foreground'>
+					<SheetTrigger className='bg-primary rounded p-1 text-primary-foreground shadow-md'>
 						<Filter className='size-5' />
 					</SheetTrigger>
 					<SheetContent className='w-[400px] sm:w-[540px]'>
