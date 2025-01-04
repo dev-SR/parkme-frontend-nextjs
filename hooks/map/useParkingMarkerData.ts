@@ -1,12 +1,12 @@
 'use client';
 import api from '@/lib/axiosApi';
 import { DistrictGeocodeType } from '@/lib/geo-data/districts';
-import { FilterLocationFormSchemaType } from '@/lib/schema';
+import { FilterParkingsFormSchemaType } from '@/lib/schema';
 import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from '@uidotdev/usehooks';
 import { useWatch } from 'react-hook-form';
 
-// const fetchFilteredData = async (filters: FilterLocationFormSchemaType) => {
+// const fetchFilteredData = async (filters: FilterParkingsFormSchemaType) => {
 // 	const response = await fetch('/api/search', {
 // 		method: 'POST',
 // 		headers: {
@@ -21,7 +21,7 @@ import { useWatch } from 'react-hook-form';
 // };
 
 export const useParkingMarkerData = () => {
-	const formData = useWatch<FilterLocationFormSchemaType>();
+	const formData = useWatch<FilterParkingsFormSchemaType>();
 	const debouncedFormData = useDebounce(formData, 500);
 
 	return useQuery({
@@ -46,7 +46,7 @@ export const useParkingMarkerData = () => {
 					swLng: formData.bounds?.sw_lng!
 				}
 			}),
-		enabled: !!formData.bounds,
+		enabled: !!formData.bounds?.ne_lat,
 		refetchOnWindowFocus: false,
 		refetchIntervalInBackground: false,
 		retry: 0

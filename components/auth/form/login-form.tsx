@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
 	Form,
 	FormControl,
@@ -25,6 +25,9 @@ import api from '@/lib/axiosApi';
 
 export function LoginForm() {
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const redirectUrlRaw = searchParams.toString().replace('redirect=', '');
+	const redirectUrl = decodeURIComponent(redirectUrlRaw) || DEFAULT_LOGIN_REDIRECT;
 
 	const form = useForm<LoginSchemaType>({
 		// resolver: zodResolver(LoginSchema),
@@ -37,7 +40,7 @@ export function LoginForm() {
 		mutationFn: api.Auth.login,
 		onSuccess: (res) => {
 			toast.success('Login successful');
-			router.push(DEFAULT_LOGIN_REDIRECT);
+			router.push(redirectUrl);
 		},
 		onError: (error) => {
 			console.log(error);

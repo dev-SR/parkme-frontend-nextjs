@@ -8,7 +8,7 @@ import { Check } from 'lucide-react';
 import { useDebounce } from '@uidotdev/usehooks';
 import { Command, CommandEmpty, CommandGroup, CommandList } from '@/components/ui/command';
 import { useCallback, useState } from 'react';
-import { FilterLocationFormSchemaType } from '@/lib/schema';
+import { FilterParkingsFormSchemaType } from '@/lib/schema';
 import { LuMapPin } from 'react-icons/lu';
 import { Spinner } from '@/components/ui/extended/Spinner';
 import mapApi from '@/lib/mapboxApi';
@@ -17,8 +17,8 @@ import { SearchBoxSuggestions } from '@/lib/types/map/search';
 import { useMap } from 'react-map-gl';
 
 const AddressAutoComplete = () => {
-	const form = useFormContext<FilterLocationFormSchemaType>();
-	const formData = useWatch<FilterLocationFormSchemaType>();
+	const form = useFormContext<FilterParkingsFormSchemaType>();
+	const formData = useWatch<FilterParkingsFormSchemaType>();
 
 	const [searchInput, setSearchInput] = useState('');
 	const debouncedSearchInput = useDebounce(searchInput, 1000);
@@ -85,7 +85,7 @@ const AddressAutoComplete = () => {
 					onBlur={close}
 					onFocus={open}
 					placeholder={'Enter address'}
-					className='w-full p-3 outline-none bg-transparent pl-3 '
+					className='w-[216px] p-2 outline-none bg-transparent pl-3 '
 				/>
 			</div>
 			{isOpen ? (

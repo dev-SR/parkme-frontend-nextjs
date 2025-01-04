@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { FilterLocationFormSchemaType } from '@/lib/schema';
+import { FilterParkingsFormSchemaType } from '@/lib/schema';
 import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FaLocationCrosshairs } from 'react-icons/fa6';
@@ -9,7 +9,7 @@ import { useMap } from 'react-map-gl';
 import { toast } from 'sonner';
 
 const GetUserLocation: React.FC = () => {
-	const form = useFormContext<FilterLocationFormSchemaType>();
+	const form = useFormContext<FilterParkingsFormSchemaType>();
 	// const [geocode, setGeocode] = React.useState<{ latitude: number; longitude: number } | undefined>(
 	// 	undefined
 	// );

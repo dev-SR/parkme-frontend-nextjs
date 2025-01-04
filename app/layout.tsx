@@ -2,12 +2,11 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from 'next-themes';
 
-import { Nunito } from 'next/font/google';
-import NavBar from '@/components/Nav/NavBar';
+import { Inter } from 'next/font/google';
 import ReactQueryProvider from '@/providers/react-query';
 import ToasterWithTheme from '@/components/ui/extended/ToasterTheme';
 
-const font = Nunito({
+const font = Inter({
 	weight: '400',
 	subsets: ['latin'],
 	display: 'swap'

@@ -9,11 +9,11 @@ import {
 	FormMessage,
 	FormDescription
 } from '@/components/ui/form';
-import { FilterLocationFormSchemaType } from '@/lib/schema';
+import { FilterParkingsFormSchemaType } from '@/lib/schema';
 import { useFormContext } from 'react-hook-form';
 
 const PricePerHourSlider = () => {
-	const form = useFormContext<FilterLocationFormSchemaType>();
+	const form = useFormContext<FilterParkingsFormSchemaType>();
 	return (
 		<FormField
 			control={form.control}

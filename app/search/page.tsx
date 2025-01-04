@@ -7,9 +7,7 @@ export default function Layout() {
 		<div className='container mx-auto relative isolate'>
 			<TopEffects />
 			<div>
-				<h1 className='text-2xl font-bold py-3 motion-preset-typewriter '>
-					Search for Nearby Parking
-				</h1>
+				<h1 className='text-2xl py-3 motion-preset-typewriter '>Search for Nearby Parking</h1>
 			</div>
 			<div className='border-2 border-border shadow rounded-lg overflow-hidden'>
 				<FilterFormProvider>

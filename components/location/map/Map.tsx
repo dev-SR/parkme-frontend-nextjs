@@ -29,16 +29,22 @@ import VehicleTypeMultiSelect from '../filter/VehicleTypeMultiSelect';
 import AddressAutoComplete from '../filter/AddressAutoComplete';
 import YourLocationMarker from './YourLocationMarker';
 import { useFormContext } from 'react-hook-form';
-import { FilterLocationFormSchemaType } from '@/lib/schema';
+import { FilterParkingsFormSchemaType } from '@/lib/schema';
 import LoadingMarkers from './LoadingMarker';
 import GetUserLocation from './GetUserLocation';
 import ErrorMarker from './ErrorMarker';
 import { FaLocationDot } from 'react-icons/fa6';
+import { StartDateTimeForm } from '@/components/bookings/BookingDateTime';
+import {
+	ClockIcons,
+	FilterEndDateTimeForm,
+	FilterStartDateTimeForm
+} from '../filter/FilterDateTime';
 
 const MyMap = () => {
 	const { theme } = useTheme();
 	const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
-	const form = useFormContext<FilterLocationFormSchemaType>();
+	const form = useFormContext<FilterParkingsFormSchemaType>();
 
 	const handleMapChange = useCallback((target: ViewStateChangeEvent['target']) => {
 		const bounds = target.getBounds();
@@ -102,7 +108,7 @@ const MyMap = () => {
 							<SheetTitle>Apply Filters</SheetTitle>
 							<SheetDescription>Narrow down your search</SheetDescription>
 						</SheetHeader>
-						<form className='space-y-4'>
+						<form className='space-y-4' onSubmit={(e) => e.preventDefault()}>
 							<VehicleTypeMultiSelect />
 							<PricePerHourSlider />
 						</form>
@@ -110,9 +116,21 @@ const MyMap = () => {
 				</Sheet>
 			</MapPanel>
 
-			<MapPanel position='left-top'>
+			<div className={`absolute space-y-2 p-2 top-[2px] left-[2px] flex flex-col items-start `}>
 				<AddressAutoComplete />
-			</MapPanel>
+			</div>
+			<div className={`absolute space-y-2 p-2 top-[50px] left-[2px] flex flex-col items-start `}>
+				<div className='flex '>
+					<div className='w-6'>
+						<ClockIcons />
+					</div>
+					<div className='space-y-1'>
+						<FilterStartDateTimeForm />
+						<FilterEndDateTimeForm />
+					</div>
+				</div>
+			</div>
+
 			<MapPanel position='center-center'>
 				<LoadingMarkers />
 			</MapPanel>

@@ -1,12 +1,12 @@
 'use client';
 
-import { FilterLocationFormSchemaType } from '@/lib/schema';
+import { FilterParkingsFormSchemaType } from '@/lib/schema';
 import { useWatch } from 'react-hook-form';
 import { Marker } from 'react-map-gl';
 import { RiUserLocationFill } from 'react-icons/ri';
 
 const YourLocationMarker = () => {
-	const formData = useWatch<FilterLocationFormSchemaType>();
+	const formData = useWatch<FilterParkingsFormSchemaType>();
 
 	return (
 		formData.address?.coordinates &&

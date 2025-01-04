@@ -11,6 +11,7 @@ BY DEFAULT EVERY ROUTES IS PROTECTED
 
 export default async function middleware(request: NextRequest) {
 	const pathname = request.nextUrl.pathname;
+	const searchParams = request.nextUrl.searchParams;
 	const isPublicRoute = publicRoutes.includes(pathname);
 	const isAuthRoute = authRoutes.includes(pathname);
 
@@ -34,29 +35,31 @@ export default async function middleware(request: NextRequest) {
 	// For all other routes (protected by default)
 	if (!userLoggedIn) {
 		// Deny access and redirect to login if not logged in
+		if (pathname.startsWith('/bookings')) {
+			const redirectTo = `/auth/login?redirect=${pathname}?${searchParams.toString()}`;
+			return NextResponse.redirect(new URL(redirectTo, request.nextUrl));
+		}
 		return NextResponse.redirect(new URL(LOGIN_PATH, request.nextUrl));
 	}
 
 	return NextResponse.next(); // Allow for logged-in users
 }
 
-// export const config = {
-// 	matcher: [
-// 		// Skip Next.js internals and all static files, unless found in search params
-// 		'/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-// 		// Always run for API routes
-// 		'/(api|trpc)(.*)'
-// 	]
-// };
 export const config = {
 	matcher: [
-		/*
-		 * Match all request paths except for the ones starting with:
-		 * - api (API routes)
-		 * - _next/static (static files)
-		 * - _next/image (image optimization files)
-		 * - favicon.ico, sitemap.xml, robots.txt (metadata files)
-		 */
-		'/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)'
+		// Skip Next.js internals and all static files, unless found in search params
+		'/((?!api|_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)'
 	]
 };
+// export const config = {
+// 	matcher: [
+// 		/*
+// 		 * Match all request paths except for the ones starting with:
+// 		 * - api (API routes)
+// 		 * - _next/static (static files)
+// 		 * - _next/image (image optimization files)
+// 		 * - favicon.ico, sitemap.xml, robots.txt (metadata files)
+// 		 */
+// 		'/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)'
+// 	]
+// };

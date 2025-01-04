@@ -5,8 +5,40 @@ import { INITIAL_VIEW_STATE } from '@/lib/constants';
 import { useParkingMarkerData } from '@/hooks/map/useParkingMarkerData';
 import { toast } from 'sonner';
 import { FaSquareParking } from 'react-icons/fa6';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger
+} from '@/components/ui/dialog';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselPrevious,
+	CarouselNext
+} from '@/components/ui/carousel';
+import ImagePreviews from '@/components/bookings/ImagePreviews';
+import BookingFormProvider from '@/components/bookings/BookingFormProvider';
+import { PhoneNumberInput, VehicleNumberPalateInput } from '@/components/bookings/BookingsInputs';
+import { DateRangeBookingInfo } from '@/components/bookings/DateRangeBookingInfo';
+import ParkingSpotChooser from '@/components/bookings/ParkingSpotChooser';
+import VehicleTypeRadioSelect from '@/components/bookings/VehicleTypeRadioSelect';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { ParkingLotsDto } from '@/lib/types/map/search';
+import DumpFromData from '@/components/bookings/DumpFromData';
+import { Separator } from '@/components/ui/separator';
+import PricingDetails from '@/components/bookings/PricingDetails';
+import { BookingsFormSchemaType } from '@/lib/schema';
+import { useWatch } from 'react-hook-form';
 
 const ShowParkingMarkers = () => {
+	const filterFormData = useWatch<BookingsFormSchemaType>();
+
 	const mapRef = useMap();
 	const bounds = mapRef.current ? mapRef.current.getBounds()?.toArray().flat() : null;
 
@@ -31,13 +63,14 @@ const ShowParkingMarkers = () => {
 		//     disableRefresh: isFetching
 	});
 
-	if (clusters.length === 0) return <div />;
+	// if (clusters.length === 0) return <div />;
 
 	return clusters.map((cluster, i) => {
 		const [longitude, latitude] = cluster.geometry.coordinates;
 		const isCluster = cluster.properties?.cluster;
 		const pointCount = cluster.properties?.point_count;
 		// console.log(cluster.id);
+		const parkingSpotData = cluster.properties as ParkingLotsDto;
 
 		if (isCluster) {
 			return (
@@ -70,20 +103,54 @@ const ShowParkingMarkers = () => {
 		}
 
 		return (
-			<Marker
-				anchor='bottom'
-				key={cluster.properties?.id}
-				longitude={longitude}
-				latitude={latitude}
-				className='cursor-pointer shadow-md'
-				onClick={(e) => {
-					// If we let the click event propagates to the map, it will immediately close the popup
-					// with `closeOnClick: true`
-					e.originalEvent.stopPropagation();
-					toast.info(JSON.stringify(cluster.properties));
-				}}>
-				<FaSquareParking className='size-7 text-primary ' />
-			</Marker>
+			<Dialog>
+				<DialogTrigger>
+					<Marker
+						anchor='bottom'
+						key={i}
+						longitude={longitude}
+						latitude={latitude}
+						className='cursor-pointer shadow-md'>
+						<FaSquareParking className='size-7 text-primary ' />
+					</Marker>
+				</DialogTrigger>
+				<DialogContent
+					className={
+						'max-h-[calc(100dvh-2rem)] max-w-screen-sm md:max-w-screen-md overflow-y-auto overflow-x-hidden'
+					}>
+					<DialogHeader className='flex flex-col items-start'>
+						<DialogTitle className='text-2xl'>Booking</DialogTitle>
+						<DialogDescription className='flex items-center'>
+							{cluster.properties?.name} - {cluster.properties?.address}
+							<Badge variant='secondary' className='ml-2'>
+								Verified
+							</Badge>
+						</DialogDescription>
+					</DialogHeader>
+					<div className='flex flex-col gap-4'>
+						<BookingFormProvider
+							defaultValues={{
+								startTime: filterFormData.startTime || new Date(),
+								endTime: filterFormData.endTime || new Date(new Date().getTime() + 60 * 60 * 1000),
+								parkingLotId: parkingSpotData.id
+							}}>
+							<div className='flex flex-col items-center'>
+								<ImagePreviews />
+							</div>
+
+							<ParkingSpotChooser />
+							<DateRangeBookingInfo />
+
+							<VehicleTypeRadioSelect />
+
+							<PricingDetails />
+							<Button type='submit' className='w-full'>
+								Book Now
+							</Button>
+						</BookingFormProvider>
+					</div>
+				</DialogContent>
+			</Dialog>
 		);
 	});
 };

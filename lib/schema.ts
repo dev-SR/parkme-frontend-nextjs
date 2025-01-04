@@ -1,4 +1,6 @@
 import { map, z } from 'zod';
+import { isEndTimeValid, isStartTimeValid } from './utils';
+import { p, section } from 'motion/react-client';
 
 export const LoginSchema = z.object({
 	email: z.string().email('Please enter a valid email address'),
@@ -12,32 +14,76 @@ export const RegisterSchema = z.object({
 	// re_password: z.string().min(8, 'Re password must be at least 8 characters')
 });
 
-export const FilterLocationFormSchema = z.object({
-	address: z.object({
-		label: z.string().optional(),
-		mapboxId: z.string().optional(),
-		coordinates: z
+export const FilterParkingsFormSchema = z
+	.object({
+		address: z.object({
+			label: z.string().optional(),
+			mapboxId: z.string().optional(),
+			coordinates: z
+				.object({
+					latitude: z.number(),
+					longitude: z.number()
+				})
+				.optional()
+		}),
+		bounds: z
 			.object({
-				latitude: z.number(),
-				longitude: z.number()
+				ne_lat: z.number(),
+				ne_lng: z.number(),
+				sw_lat: z.number(),
+				sw_lng: z.number()
 			})
-			.optional()
-	}),
-	bounds: z
-		.object({
-			ne_lat: z.number(),
-			ne_lng: z.number(),
-			sw_lat: z.number(),
-			sw_lng: z.number()
+			.optional(),
+		vehicleTypes: z.array(z.string()).refine((value) => value.some((item) => item), {
+			message: 'You have to select at least one item.'
+		}),
+		price_per_hour_range: z.array(z.number()),
+		startTime: z.date({
+			required_error: 'Start time is required'
+		}),
+		endTime: z.date({
+			required_error: 'Start time is required'
 		})
-		.optional(),
-	vehicleTypes: z.array(z.string()).refine((value) => value.some((item) => item), {
-		message: 'You have to select at least one item.'
-	}),
-	price_per_hour_range: z.array(z.number())
-});
+	})
+	.refine(({ startTime }) => isStartTimeValid(new Date(startTime)), {
+		message: 'Start time should be greater than current time',
+		path: ['startTime']
+	})
+	.refine(({ endTime, startTime }) => isEndTimeValid({ endTime, startTime }), {
+		message: 'End time should be greater than start time',
+		path: ['endTime']
+	});
 
-export type FilterLocationFormSchemaType = z.infer<typeof FilterLocationFormSchema>;
+export const BookingsFormSchema = z
+	.object({
+		parkingLotId: z.string(),
+		section: z.enum(['A', 'B'], {
+			required_error: 'Section is required'
+		}),
+		spotNo: z.coerce.number(),
+		startTime: z.date({
+			required_error: 'Start time is required'
+		}),
+		endTime: z.date({
+			required_error: 'Start time is required'
+		}),
+		// vehicleNumber: z.string().min(5, { message: 'Vehicle number is required' }),
+		// phoneNumber: z.string().length(13, { message: 'Invalid phone number' }),
+		vehicleType: z.enum(['CAR', 'MOTORCYCLE', 'TRUCK', 'BUS', 'BICYCLE'], {
+			required_error: 'Vehicle type is required'
+		})
+		// valet: formSchemaValet.optional()
+	})
+	.refine(({ startTime }) => isStartTimeValid(startTime), {
+		message: 'Start time should be greater than current time',
+		path: ['startTime']
+	})
+	.refine(({ endTime, startTime }) => isEndTimeValid({ endTime, startTime }), {
+		message: 'End time should be greater than start time',
+		path: ['endTime']
+	});
 
 export type LoginSchemaType = z.infer<typeof LoginSchema>;
 export type RegisterSchemaType = z.infer<typeof RegisterSchema>;
+export type FilterParkingsFormSchemaType = z.infer<typeof FilterParkingsFormSchema>;
+export type BookingsFormSchemaType = z.infer<typeof BookingsFormSchema>;

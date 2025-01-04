@@ -5,7 +5,7 @@ import { FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/
 import { cn } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
 
-import { FilterLocationFormSchemaType } from '@/lib/schema';
+import { FilterParkingsFormSchemaType } from '@/lib/schema';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const vehicleType = [
@@ -37,7 +37,7 @@ const vehicleType = [
 ];
 
 const VehicleTypeMultiSelect = () => {
-	const form = useFormContext<FilterLocationFormSchemaType>();
+	const form = useFormContext<FilterParkingsFormSchemaType>();
 	// const watched = useWatch({
 	// 	// control: form.control, //control is optional as we are inside form context
 	// 	name: 'vehicleTypes'
