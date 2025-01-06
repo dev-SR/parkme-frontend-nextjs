@@ -7,7 +7,6 @@ import { Card, CardContent } from '@/components/ui/card';
 
 import { BookingsFormSchemaType } from '@/lib/schema';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { RadioGroup } from '@/components/ui/radio-group';
 import { useParkingStore } from '@/stores/bookingStore';
 import { useEffect } from 'react';
 import { FaVanShuttle } from 'react-icons/fa6';
@@ -67,33 +66,29 @@ const VehicleTypeRadioSelect = () => {
 								control={form.control}
 								name='vehicleType'
 								render={({ field }) => (
-									<RadioGroup
-										onValueChange={field.onChange}
-										defaultValue={field.value}
-										className='flex flex-col space-y-1'>
-										<FormItem className='flex items-center space-x-3 space-y-0'>
-											<FormLabel className='font-normal'>
-												<TooltipProvider>
-													<Tooltip defaultOpen={false}>
-														<TooltipTrigger>
-															<Card
-																key={item.value}
-																className={cn(
-																	'text-primary border-2 rounded-none cursor-pointer hover:bg-accent p-0',
-																	field.value?.includes(item.value) && 'border-primary'
-																)}
-																onClick={() => {
-																	field.onChange(item.value);
-																}}>
-																<CardContent className='p-2'>{item.icon}</CardContent>
-															</Card>
-														</TooltipTrigger>
-														<TooltipContent>{item.value}</TooltipContent>
-													</Tooltip>
-												</TooltipProvider>
-											</FormLabel>
-										</FormItem>
-									</RadioGroup>
+									<FormItem className='flex items-center space-x-3 space-y-0'>
+										<FormLabel className='font-normal'>
+											<TooltipProvider>
+												<Tooltip defaultOpen={false}>
+													<TooltipTrigger>
+														<Card
+															key={item.value}
+															className={cn(
+																'text-primary border-2 rounded-none cursor-pointer hover:bg-accent p-0',
+																field.value?.includes(item.value) && 'border-primary'
+															)}
+															onClick={(e) => {
+																e.preventDefault();
+																field.onChange(item.value);
+															}}>
+															<CardContent className='p-2'>{item.icon}</CardContent>
+														</Card>
+													</TooltipTrigger>
+													<TooltipContent>{item.value}</TooltipContent>
+												</Tooltip>
+											</TooltipProvider>
+										</FormLabel>
+									</FormItem>
 								)}
 							/>
 						))}

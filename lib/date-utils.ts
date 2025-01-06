@@ -13,6 +13,24 @@ export const formatDate = (date: string) => {
 	return format(dateObj, 'dd MMM yy');
 };
 
+// Reusable function for formatting dates
+export function formatDate2(timestamp: string, formatString: string = 'EEE, dd MMM yyyy, h:mm a') {
+	const date = new Date(timestamp);
+	return format(date, formatString);
+}
+/* 
+// Format 1: Monday, January 6th, 2025 7:41
+const format1 = format(date, "EEEE, MMMM do, yyyy h:mm a");
+// Format 2: 06/01/2025, 19:41
+const format2 = format(date, "dd/MM/yyyy, HH:mm");
+// Format 3: Jan 6, 2025 7:41 PM
+const format3 = format(date, "MMM d, yyyy h:mm a");
+// Format 4: 2025-01-06 19:41
+const format4 = format(date, "yyyy-MM-dd HH:mm");
+// Format 5: Mon, 06 Jan 2025, 7:41 PM
+const format5 = format(date, "EEE, dd MMM yyyy, h:mm a");
+*/
+
 export const formatTime = (date: string) => {
 	const dateObj = new Date(date);
 	return format(dateObj, 'HH:mm');

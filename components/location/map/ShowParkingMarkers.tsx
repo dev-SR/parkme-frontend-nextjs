@@ -120,18 +120,18 @@ const ShowParkingMarkers = () => {
 							defaultValues={{
 								startTime: filterFormData.startTime || new Date(),
 								endTime: filterFormData.endTime || new Date(new Date().getTime() + 60 * 60 * 1000),
-								parkingLotId: parkingSpotData.id
+								parkingLotId: parkingSpotData.id,
+								totalPrice: 0,
+								pricePerHour: 0,
+								parkingAddress: parkingSpotData.address
 							}}>
 							<div className='flex flex-col items-center'>
 								<ImagePreviews />
 							</div>
-							<VehicleTypeRadioSelect />
 							<ParkingSpotChooser />
+							<VehicleTypeRadioSelect />
 							<DateRangeBookingInfo />
 							<PricingDetails />
-							<Button type='submit' className='w-full'>
-								Book Now
-							</Button>
 						</BookingFormProvider>
 					</div>
 				</DialogContent>

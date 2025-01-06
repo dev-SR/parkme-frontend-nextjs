@@ -62,19 +62,23 @@ const ParkingSpotChooser = () => {
 		mutationFn: api.ParkingSpaces.getParkingSpaces,
 		onSuccess: (data) => {
 			setSections(transformSpots(data, vehicleType));
+			form.setValue('parkingSpotId', '', { shouldValidate: true });
 		},
 		onError: (error) => {
 			const err = HandleAxiosError.process(error);
 			toast.error(err.message);
 		}
 	});
-
-	useEffect(() => {
+	const handleMutation = () => {
 		mutation.mutate({
 			parkingLotId,
 			startDate: startDate.toISOString(),
 			endDate: endDate.toISOString()
 		});
+	};
+
+	useEffect(() => {
+		handleMutation();
 	}, [startDate, endDate]);
 
 	useEffect(() => {

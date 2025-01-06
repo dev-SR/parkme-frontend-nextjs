@@ -10,16 +10,18 @@ export type TotalPriceType = {
 
 export const useTotalPrice = ({ pricePerHour }: TotalPriceType) => {
 	const { startTime, endTime } = useWatch<BookingsFormSchemaType>();
-	const form = useFormContext<BookingsFormSchemaType>();
-	// console.log(form.formState.errors);
 
 	const [parkingCharge, setParkingCharge] = useState(0);
-	// const [valetChargePickup, setValetChargePickup] = useState(0);
-	// const [valetChargeDropoff, setValetChargeDropoff] = useState(0);
-
+	const [duration, setDuration] = useState(0);
+	// // const [valetChargePickup, setValetChargePickup] = useState(0);
+	// // const [valetChargeDropoff, setValetChargeDropoff] = useState(0);
 	useEffect(() => {
 		if (!startTime || !endTime) return;
-		if (!pricePerHour) return;
+
+		if (pricePerHour === 0 || !pricePerHour) {
+			setParkingCharge(0);
+			return;
+		}
 
 		const differenceInMilliseconds = differenceInTime({
 			startTime: new Date(startTime),
@@ -32,14 +34,15 @@ export const useTotalPrice = ({ pricePerHour }: TotalPriceType) => {
 		}
 
 		const differenceInHours = differenceInMilliseconds / (60 * 60 * 1000);
+		setDuration(differenceInHours);
 
-		const parkingCharge = Math.floor((pricePerHour || 0) * differenceInHours);
-
-		setParkingCharge(parkingCharge);
+		const charge = Math.floor((pricePerHour || 0) * differenceInHours);
+		setParkingCharge(charge);
 	}, [pricePerHour, startTime, endTime]);
 
 	return {
 		parkingCharge,
-		totalPrice: parkingCharge
+		totalPrice: parkingCharge,
+		duration
 	};
 };

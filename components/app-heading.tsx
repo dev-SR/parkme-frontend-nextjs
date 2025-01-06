@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
 import useSession from '@/hooks/useSession';
 import { Spinner } from './ui/extended/Spinner';
+import { LoadingSpinner } from './ui/extended/loading-spinner';
 
 const navigation = [
 	{ name: 'Features', href: '#' },
@@ -53,7 +54,7 @@ const Header = () => {
 							Welcome, {user.firstName} {user.lastName}
 						</span>
 						<Button size='sm' onClick={handleSignOut}>
-							{isLoggingOut && <Spinner />}
+							{isLoggingOut && <LoadingSpinner />}
 							Log Out
 						</Button>
 					</div>

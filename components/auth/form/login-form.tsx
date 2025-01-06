@@ -10,7 +10,7 @@ import {
 	FormLabel,
 	FormMessage
 } from '@/components/ui/form';
-import { LoginSchemaType } from '@/lib/schema';
+import { LoginSchema, LoginSchemaType } from '@/lib/schema';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,6 +23,7 @@ import ListAlertDestructive from '@/components/ui/extended/ListAlertDestructive'
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
 import api from '@/lib/axiosApi';
 import { useUserStore } from '@/stores/userStore';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export function LoginForm() {
 	const router = useRouter();
@@ -32,7 +33,7 @@ export function LoginForm() {
 	const { setUser } = useUserStore();
 
 	const form = useForm<LoginSchemaType>({
-		// resolver: zodResolver(LoginSchema),
+		resolver: zodResolver(LoginSchema),
 		defaultValues: {
 			email: '',
 			password: ''

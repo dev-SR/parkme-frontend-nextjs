@@ -5,8 +5,9 @@ import { Form } from '@/components/ui/form';
 
 import { BookingsFormSchemaType, BookingsFormSchema } from '@/lib/schema';
 import { ReactNode } from 'react';
-import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { useBookingDetailsStore } from '@/stores/bookingDetailsStore';
+import { Button } from '../ui/button';
 
 const BookingFormProvider = ({
 	children,
@@ -24,22 +25,42 @@ const BookingFormProvider = ({
 		mode: 'onChange'
 	});
 	const router = useRouter();
+	const { setBookingDetails } = useBookingDetailsStore();
 
 	function onSubmit(data: BookingsFormSchemaType) {
-		const parkingLotId = data.parkingLotId;
-		const parkingSpotId = data.parkingSpotId;
-		const startTime = data.startTime;
-		const endTime = data.endTime;
-		const vehicleType = data.vehicleType;
+		const {
+			parkingLotId,
+			parkingSpotId,
+			startTime,
+			endTime,
+			vehicleType,
+			totalPrice,
+			duration,
+			pricePerHour,
+			parkingAddress
+		} = data;
 
-		router.push(
-			`/bookings/${parkingLotId}?spotId=${parkingSpotId}&startTime=${startTime.toISOString()}&endTime=${endTime.toISOString()}&vehicleType=${vehicleType}`
-		);
+		setBookingDetails({
+			parkingLotId,
+			parkingSpotId,
+			vehicleType,
+			startTime: startTime.toISOString(),
+			endTime: endTime.toISOString(),
+			duration: duration || 0,
+			totalPrice: totalPrice || 0,
+			pricePerHour: pricePerHour || 0,
+			parkingAddress: parkingAddress || ''
+		});
+
+		router.push(`/bookings/${parkingLotId}`);
 	}
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
 				{children}
+				<Button type='submit' className='w-full' disabled={!form.formState.isValid}>
+					Book Now
+				</Button>
 			</form>
 		</Form>
 	);

@@ -57,18 +57,20 @@ export const FilterParkingsFormSchema = z
 export const BookingsFormSchema = z
 	.object({
 		parkingLotId: z.string(),
-		parkingSpotId: z.string(),
+		parkingSpotId: z.string().min(5, { message: 'Parking spot is required' }),
 		startTime: z.date({
 			required_error: 'Start time is required'
 		}),
 		endTime: z.date({
 			required_error: 'Start time is required'
 		}),
-		// vehicleNumber: z.string().min(5, { message: 'Vehicle number is required' }),
-		// phoneNumber: z.string().length(13, { message: 'Invalid phone number' }),
 		vehicleType: z.enum(['CAR', 'MOTORCYCLE', 'TRUCK', 'VAN', 'BICYCLE'], {
 			required_error: 'Vehicle type is required'
-		})
+		}),
+		pricePerHour: z.number().optional(),
+		duration: z.number().optional(),
+		totalPrice: z.number().optional(),
+		parkingAddress: z.string().optional()
 		// valet: formSchemaValet.optional()
 	})
 	.refine(({ startTime }) => isStartTimeValid(startTime), {
@@ -82,10 +84,11 @@ export const BookingsFormSchema = z
 
 export const PayNowPartialFormSchema = z.object({
 	vehicleNumber: z.string().min(5, { message: 'Vehicle number is required' }),
-	phoneNumber: z.string().length(13, { message: 'Invalid phone number' })
+	phoneNumber: z.string().length(14, { message: 'Invalid phone number' })
 });
 
 export type LoginSchemaType = z.infer<typeof LoginSchema>;
 export type RegisterSchemaType = z.infer<typeof RegisterSchema>;
 export type FilterParkingsFormSchemaType = z.infer<typeof FilterParkingsFormSchema>;
 export type BookingsFormSchemaType = z.infer<typeof BookingsFormSchema>;
+export type PayNowPartialFormSchemaType = z.infer<typeof PayNowPartialFormSchema>;

@@ -11,11 +11,11 @@ import {
 	FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { BookingsFormSchemaType } from '@/lib/schema';
+import {  PayNowPartialFormSchemaType } from '@/lib/schema';
 import { PhoneInput } from '@/components/ui/extended/phone-input';
 
 export function PhoneNumberInput() {
-	const form = useFormContext<BookingsFormSchemaType>();
+	const form = useFormContext<PayNowPartialFormSchemaType>();
 
 	return (
 		<FormField
@@ -34,7 +34,7 @@ export function PhoneNumberInput() {
 	);
 }
 export function VehicleNumberPalateInput() {
-	const form = useFormContext<BookingsFormSchemaType>();
+	const form = useFormContext<PayNowPartialFormSchemaType>();
 
 	return (
 		<FormField
