@@ -1,18 +1,41 @@
-import { useQuery } from '@tanstack/react-query';
+import api from '@/lib/axiosApi';
+import { useUserStore } from '@/stores/userStore';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 export default function useSession() {
-	// const { data: session, isLoading } = useQuery({
-	// 	queryKey: ['session'],
-	// 	queryFn: async () => {
-	// 		const response = await fetch(sessionApiRoute);
-	// 		return response.json();
-	// 	}
-	// });
-	// const { trigger: login } = useSWRMutation(sessionApiRoute, doLogin, {
-	// 	// the login route already provides the updated information, no need to revalidate
-	// 	revalidate: false
-	// });
-	// const { trigger: logout } = useSWRMutation(sessionApiRoute, doLogout);
-	// const { trigger: increment } = useSWRMutation(sessionApiRoute, doIncrement);
-	// return { session, logout, login, increment, isLoading };
+	const { user, setUser, clearUser } = useUserStore();
+
+	const query = useQuery({
+		queryKey: ['session'],
+		queryFn: api.Auth.getProfile,
+		enabled: !user,
+		retry: false,
+		refetchOnWindowFocus: false,
+		refetchIntervalInBackground: false
+	});
+
+	useEffect(() => {
+		if (query.data) {
+			if (!user) {
+				setUser(query.data);
+			}
+		}
+	}, [query.data, setUser]);
+
+	const logoutMutate = useMutation({
+		mutationFn: api.Auth.logout,
+		onSuccess: () => {
+			clearUser();
+		}
+	});
+
+	return {
+		user,
+		setUser,
+		clearUser,
+		logout: logoutMutate.mutate,
+		isUserFetching: query.isLoading,
+		isLoggingOut: logoutMutate.isPending
+	};
 }

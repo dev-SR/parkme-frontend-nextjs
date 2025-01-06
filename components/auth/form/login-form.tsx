@@ -22,12 +22,14 @@ import { LoadingSpinner } from '@/components/ui/extended/loading-spinner';
 import ListAlertDestructive from '@/components/ui/extended/ListAlertDestructive';
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
 import api from '@/lib/axiosApi';
+import { useUserStore } from '@/stores/userStore';
 
 export function LoginForm() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const redirectUrlRaw = searchParams.toString().replace('redirect=', '');
 	const redirectUrl = decodeURIComponent(redirectUrlRaw) || DEFAULT_LOGIN_REDIRECT;
+	const { setUser } = useUserStore();
 
 	const form = useForm<LoginSchemaType>({
 		// resolver: zodResolver(LoginSchema),
@@ -39,6 +41,7 @@ export function LoginForm() {
 	const mutation = useMutation<LoginResponse, AxiosErrorType, LoginRequest>({
 		mutationFn: api.Auth.login,
 		onSuccess: (res) => {
+			setUser(res.user);
 			toast.success('Login successful');
 			router.push(redirectUrl);
 		},

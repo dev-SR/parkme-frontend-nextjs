@@ -2,6 +2,7 @@ import axios from 'axios';
 import { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from './types/auth/login';
 import { FindNeaByParkingLotsRequestBody, FindNeaByParkingLotsResponse } from './types/map/search';
 import { ParkingSpacesRequestBody, ParkingSpacesResponse } from './types/map/parking';
+import { User } from '@/stores/userStore';
 
 const axiosBaseToApi = axios.create({
 	baseURL: process.env.NEXT_PUBLIC_BASE_URL,
@@ -62,7 +63,8 @@ const Auth = {
 	_login: (values: LoginRequest) => toBackend.post<LoginResponse>('/api/auth/login', values),
 	register: (values: RegisterRequest) => toApiRoute.post<null>('/api/auth/register', values),
 	_register: (values: RegisterRequest) => toBackend.post<null>('/api/auth/register', values),
-	getProfile: () => toApiRoute.get<LoginResponse>('/api/auth/current-user')
+	getProfile: () => toApiRoute.get<User>('/api/auth/current-user'),
+	logout: () => toApiRoute.post<null>('/api/auth/logout', {})
 };
 
 const ParkingLots = {
