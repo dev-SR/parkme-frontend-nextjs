@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -12,15 +11,18 @@ import {
 	FormLabel,
 	FormMessage
 } from '@/components/ui/form';
-import { LoadingSpinner } from '@/components/ui/extended/loading-spinner';
-import { AlertDestructive } from '@/components//ui/extended/AlertDestructive';
-import { toast } from 'sonner';
-import { useServerAction } from 'zsa-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { RegisterSchemaType, RegisterSchema } from '@/lib/schema';
+import { RegisterRequest, RegisterResponse } from '@/lib/types/auth/login';
+import { AxiosErrorType, HandleAxiosError } from '@/lib/types/error/process-axios-error';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import api from '@/lib/axiosApi';
+import { LOGIN_PATH } from '@/routes';
+import ListAlertDestructive from '@/components/ui/extended/ListAlertDestructive';
+import { LoadingSpinner } from '@/components/ui/extended/loading-spinner';
 
 export function RegisterForm() {
 	const router = useRouter();
@@ -28,24 +30,26 @@ export function RegisterForm() {
 	const form = useForm<RegisterSchemaType>({
 		resolver: zodResolver(RegisterSchema),
 		defaultValues: {
-			first_name: '',
-			last_name: '',
+			firstName: '',
+			lastName: '',
 			email: '',
 			password: ''
 		}
 	});
-	// const action = useServerAction(loginAction, {
-	// 	onSuccess({ data: { success } }) {
-	// 		toast.success(success);
-	// 		router.push(DEFAULT_LOGIN_REDIRECT);
-	// 		router.refresh();
-	// 	},
-	// 	onError({ err: { message } }) {
-	// 		toast.error(message);
-	// 	}
-	// });
+	const mutation = useMutation<RegisterResponse, AxiosErrorType, RegisterRequest>({
+		mutationFn: api.Auth.register,
+		onSuccess: (res) => {
+			toast.success('🎉Congrats!🎉 You have successfully registered.');
+			router.push(LOGIN_PATH);
+		},
+		onError: (error) => {
+			// console.log(error);
+			const err = HandleAxiosError.process(error);
+			toast.error(err.message);
+		}
+	});
 	async function onSubmit(values: RegisterSchemaType) {
-		// await action.execute(values);
+		mutation.mutate(values);
 	}
 
 	return (
@@ -55,14 +59,17 @@ export function RegisterForm() {
 					<CardTitle className='text-xl'>Welcome back</CardTitle>
 					<CardDescription>Login with your Email and Password</CardDescription>
 				</CardHeader>
+
 				<CardContent>
+					{mutation.isError && <ListAlertDestructive error={mutation.error} />}
+
 					<Form {...form}>
 						<form onSubmit={form.handleSubmit(onSubmit)}>
 							<div className='grid gap-4'>
 								<div className='grid gap-2'>
 									<FormField
 										control={form.control}
-										name='first_name'
+										name='firstName'
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>First Name</FormLabel>
@@ -77,7 +84,7 @@ export function RegisterForm() {
 								<div className='grid gap-2'>
 									<FormField
 										control={form.control}
-										name='last_name'
+										name='lastName'
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>Last Name</FormLabel>
@@ -120,15 +127,8 @@ export function RegisterForm() {
 									/>
 								</div>
 
-								{/* {action.isError && <AlertDestructive message={action.error.message} />} */}
-
-								<Button
-									type='submit'
-									className='w-full'
-									onClick={() => {
-										// action.reset();
-									}}>
-									{/* {action.isPending && buttonClicked == 'credentials' && <LoadingSpinner />} */}
+								<Button type='submit' className='w-full'>
+									{mutation.isPending && <LoadingSpinner />}
 									Register
 								</Button>
 							</div>

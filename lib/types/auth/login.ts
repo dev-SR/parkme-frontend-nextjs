@@ -1,4 +1,4 @@
-import { LoginSchemaType } from '@/lib/schema';
+import { LoginSchemaType, RegisterSchemaType } from '@/lib/schema';
 import { User } from './user';
 
 export type LoginResponse = {
@@ -8,3 +8,6 @@ export type LoginResponse = {
 };
 
 export type LoginRequest = LoginSchemaType;
+
+export type RegisterRequest = RegisterSchemaType;
+export type RegisterResponse = null;

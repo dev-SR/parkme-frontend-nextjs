@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { LoginRequest, LoginResponse } from './types/auth/login';
+import { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from './types/auth/login';
 import { FindNeaByParkingLotsRequestBody, FindNeaByParkingLotsResponse } from './types/map/search';
 import { ParkingSpacesRequestBody, ParkingSpacesResponse } from './types/map/parking';
 
@@ -60,6 +60,8 @@ const toBackend = {
 const Auth = {
 	login: (values: LoginRequest) => toApiRoute.post<LoginResponse>('/api/auth/login', values),
 	_login: (values: LoginRequest) => toBackend.post<LoginResponse>('/api/auth/login', values),
+	register: (values: RegisterRequest) => toApiRoute.post<null>('/api/auth/register', values),
+	_register: (values: RegisterRequest) => toBackend.post<null>('/api/auth/register', values),
 	getProfile: () => toApiRoute.get<LoginResponse>('/api/auth/current-user')
 };
 
