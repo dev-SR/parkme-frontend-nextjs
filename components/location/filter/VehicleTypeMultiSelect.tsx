@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 
 import { FilterParkingsFormSchemaType } from '@/lib/schema';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { FaVanShuttle } from 'react-icons/fa6';
 
 const vehicleType = [
 	{
@@ -25,14 +26,9 @@ const vehicleType = [
 		icon: <FaTruck className='size-8' />
 	},
 	{
-		key: 'BUS',
-		label: 'BUS',
-		icon: <FaBus className='size-8' />
-	},
-	{
-		key: 'BICYCLE',
-		label: 'BICYCLE',
-		icon: <FaBicycle className='size-8' />
+		key: 'VAN',
+		label: 'VAN',
+		icon: <FaVanShuttle className='size-8' />
 	}
 ];
 
@@ -62,7 +58,7 @@ const VehicleTypeMultiSelect = () => {
 								render={({ field }) => {
 									return (
 										<TooltipProvider>
-											<Tooltip>
+											<Tooltip defaultOpen={false}>
 												<TooltipTrigger>
 													<Card
 														key={item.key}

@@ -14,8 +14,8 @@ const FilterFormProvider = ({ children }: { children: ReactNode }) => {
 			price_per_hour_range: [100, 500],
 			address: { label: undefined, mapboxId: undefined, coordinates: undefined },
 			bounds: undefined,
-			startTime: new Date(),
-			endTime: new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+			startTime: new Date(new Date().getTime() + 60 * 60 * 1000),
+			endTime: new Date(new Date().getTime() + 6 * 60 * 60 * 1000)
 		},
 		mode: 'onChange'
 	});

@@ -28,7 +28,7 @@ const ImagePreviews = () => {
 			<CarouselContent className=''>
 				{image_urls.map((url, index) => (
 					<CarouselItem key={index}>
-						<img src={url} alt='' className='object-cover h-[250px] w-full' />
+						<img src={url} alt='' className='object-cover h-[200px] w-full' />
 					</CarouselItem>
 				))}
 			</CarouselContent>

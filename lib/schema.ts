@@ -66,7 +66,7 @@ export const BookingsFormSchema = z
 		}),
 		// vehicleNumber: z.string().min(5, { message: 'Vehicle number is required' }),
 		// phoneNumber: z.string().length(13, { message: 'Invalid phone number' }),
-		vehicleType: z.enum(['CAR', 'MOTORCYCLE', 'TRUCK', 'BUS', 'BICYCLE'], {
+		vehicleType: z.enum(['CAR', 'MOTORCYCLE', 'TRUCK', 'VAN', 'BICYCLE'], {
 			required_error: 'Vehicle type is required'
 		})
 		// valet: formSchemaValet.optional()

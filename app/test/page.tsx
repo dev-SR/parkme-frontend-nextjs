@@ -43,10 +43,10 @@ const TestModal = () => {
 							<ImagePreviews />
 						</div>
 
+						<VehicleTypeRadioSelect />
 						<ParkingSpotChooser />
 						<DateRangeBookingInfo />
 
-						<VehicleTypeRadioSelect />
 						{/* <PhoneNumberInput />
 						<VehicleNumberPalateInput />
 						*/}

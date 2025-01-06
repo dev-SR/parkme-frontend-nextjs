@@ -9,6 +9,8 @@ import { BookingsFormSchemaType } from '@/lib/schema';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { RadioGroup } from '@/components/ui/radio-group';
 import { useParkingStore } from '@/stores/bookingStore';
+import { useEffect } from 'react';
+import { FaVanShuttle } from 'react-icons/fa6';
 
 const vehicleTypes = [
 	{
@@ -24,12 +26,8 @@ const vehicleTypes = [
 		icon: <FaTruck className='size-8' />
 	},
 	{
-		value: 'BUS',
-		icon: <FaBus className='size-8' />
-	},
-	{
-		value: 'BICYCLE',
-		icon: <FaBicycle className='size-8' />
+		value: 'VAN',
+		icon: <FaVanShuttle className='size-8' />
 	}
 ];
 
@@ -44,6 +42,13 @@ const VehicleTypeRadioSelect = () => {
 	const filteredVehicleTypes = uniqueVehicleTypes.length
 		? vehicleTypes.filter((item) => uniqueVehicleTypes.includes(item.value))
 		: vehicleTypes;
+
+	useEffect(() => {
+		form.setValue(
+			'vehicleType',
+			filteredVehicleTypes[0].value as BookingsFormSchemaType['vehicleType']
+		);
+	}, []);
 
 	return (
 		<FormField
@@ -69,7 +74,7 @@ const VehicleTypeRadioSelect = () => {
 										<FormItem className='flex items-center space-x-3 space-y-0'>
 											<FormLabel className='font-normal'>
 												<TooltipProvider>
-													<Tooltip>
+													<Tooltip defaultOpen={false}>
 														<TooltipTrigger>
 															<Card
 																key={item.value}

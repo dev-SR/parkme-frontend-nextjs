@@ -14,7 +14,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
 		// console.log(res);
 		// delay
-		await new Promise((resolve) => setTimeout(resolve, 1000));
+		await new Promise((resolve) => setTimeout(resolve, 500));
 
 		return NextResponse.json(res, { status: 201 });
 	} catch (error) {

@@ -90,7 +90,17 @@ export const ParkingSection = ({ section, sectionIndex, toggleSelection }: Parki
 															: carImageUrl
 													}
 													alt='vehicle image'
-													className={cn('size-20 object-contain rotate-90 blur-[2px]')}
+													className={cn(
+														'size-24 object-contain blur-[2px]',
+														spot.vehicleType === 'CAR' && isInFirstHalf && 'rotate-90',
+														spot.vehicleType === 'CAR' && !isInFirstHalf && '-rotate-90',
+														spot.vehicleType === 'MOTORCYCLE' && isInFirstHalf && 'rotate-[35deg]',
+														spot.vehicleType === 'MOTORCYCLE' &&
+															!isInFirstHalf &&
+															'-rotate-[135deg]',
+														spot.vehicleType === 'VAN' && isInFirstHalf && '-rotate-90',
+														spot.vehicleType === 'VAN' && !isInFirstHalf && 'rotate-90'
+													)}
 												/>
 											</div>
 										</div>
@@ -120,7 +130,17 @@ export const ParkingSection = ({ section, sectionIndex, toggleSelection }: Parki
 															: carImageUrl
 													}
 													alt='vehicle image'
-													className={cn('size-20 object-contain rotate-90 blur-[2px]')}
+													className={cn(
+														'size-24 object-contain ',
+														spot.vehicleType === 'CAR' && isInFirstHalf && 'rotate-90',
+														spot.vehicleType === 'CAR' && !isInFirstHalf && '-rotate-90',
+														spot.vehicleType === 'MOTORCYCLE' && isInFirstHalf && 'rotate-[35deg]',
+														spot.vehicleType === 'MOTORCYCLE' &&
+															!isInFirstHalf &&
+															'-rotate-[135deg]',
+														spot.vehicleType === 'VAN' && isInFirstHalf && '-rotate-90',
+														spot.vehicleType === 'VAN' && !isInFirstHalf && 'rotate-90'
+													)}
 												/>
 											</div>
 										</div>
@@ -157,8 +177,15 @@ export const ParkingSection = ({ section, sectionIndex, toggleSelection }: Parki
 													}
 													alt='vehicle image'
 													className={cn(
-														'size-20 object-contain rotate-90',
-														!spot.ofSelectedVehicleType && 'blur-[2px]'
+														'size-24 object-contain ',
+														spot.vehicleType === 'CAR' && isInFirstHalf && 'rotate-90',
+														spot.vehicleType === 'CAR' && !isInFirstHalf && '-rotate-90',
+														spot.vehicleType === 'MOTORCYCLE' && isInFirstHalf && 'rotate-[35deg]',
+														spot.vehicleType === 'MOTORCYCLE' &&
+															!isInFirstHalf &&
+															'-rotate-[135deg]',
+														spot.vehicleType === 'VAN' && isInFirstHalf && '-rotate-90',
+														spot.vehicleType === 'VAN' && !isInFirstHalf && 'rotate-90'
 													)}
 												/>
 											</div>

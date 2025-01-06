@@ -110,7 +110,7 @@ const ShowParkingMarkers = () => {
 						<DialogTitle className='text-2xl'>Booking</DialogTitle>
 						<DialogDescription className='flex items-center'>
 							{cluster.properties?.name} - {cluster.properties?.address}
-							<Badge variant='secondary' className='ml-2'>
+							<Badge variant={'secondary'} className='ml-2'>
 								Verified
 							</Badge>
 						</DialogDescription>
@@ -125,9 +125,9 @@ const ShowParkingMarkers = () => {
 							<div className='flex flex-col items-center'>
 								<ImagePreviews />
 							</div>
+							<VehicleTypeRadioSelect />
 							<ParkingSpotChooser />
 							<DateRangeBookingInfo />
-							<VehicleTypeRadioSelect />
 							<PricingDetails />
 							<Button type='submit' className='w-full'>
 								Book Now
