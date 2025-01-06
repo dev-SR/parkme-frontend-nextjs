@@ -1,203 +1,92 @@
 'use client';
-import { cn } from '@/lib/utils';
-import React, { useState } from 'react';
-import { DirectionDown, DirectionToRight } from './Direction';
-import { FaCheckCircle } from 'react-icons/fa';
-import { TbLockSquareRoundedFilled } from 'react-icons/tb';
+import React, { useEffect } from 'react';
+import { DirectionDown } from './Direction';
 import { BsSignTurnRightFill } from 'react-icons/bs';
 import { useFormContext } from 'react-hook-form';
 import { BookingsFormSchemaType } from '@/lib/schema';
 import { FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-type ParkingSpot = {
-	id: number;
-	available: boolean;
-	selected: boolean;
-};
+import { useMutation } from '@tanstack/react-query';
+import { AxiosErrorType, HandleAxiosError } from '@/lib/types/error/process-axios-error';
+import { ParkingSpacesRequestBody, ParkingSpacesResponse } from '@/lib/types/map/parking';
+import api from '@/lib/axiosApi';
+import { toast } from 'sonner';
+import { Section, ParkingSpotSelection, useParkingStore } from '@/stores/bookingStore';
+import ParkingSectionLoaderSkeleton from './ParkingSectionLoaderSkeleton';
+import { ParkingSection } from './ParkingSection';
 
-type Section = {
-	name: string;
-	spots: ParkingSpot[];
-};
+const transformSpots = (spots: ParkingSpacesResponse, vehicleType?: string): Section[] => {
+	const sectionsMap: Record<string, ParkingSpotSelection[]> = {};
 
-type ParkingSectionProps = {
-	section: Section;
-	sectionIndex: number;
-	toggleSelection: (sectionIndex: number, spotIndex: number) => void;
-};
+	spots.forEach((spot) => {
+		const { sectionName } = spot;
 
-const ParkingSection = ({ section, sectionIndex, toggleSelection }: ParkingSectionProps) => {
+		if (!sectionsMap[sectionName]) {
+			sectionsMap[sectionName] = [];
+		}
+
+		sectionsMap[sectionName].push({
+			...spot,
+			selected: false,
+			ofSelectedVehicleType: spot.vehicleType === vehicleType
+		});
+	});
+
 	return (
-		<div>
-			<div className='flex space-x-10 pt-4 pb-8'>
-				{sectionIndex === 0 && <div className='text-muted-foreground pl-6'>Entry</div>}
-				<DirectionToRight count={8} />
-			</div>
-			<div className='grid grid-cols-2 relative'>
-				<div className='absolute -top-5 left-[4.6rem]  md:left-[8.5rem] bg-green-600 z-40 text-white py-2 px-3 rounded-lg'>
-					{section.name}
-				</div>
-				<div className='flex flex-col '>
-					{section.spots.slice(0, section.spots.length / 2).map((spot: any) => (
-						<div
-							key={spot.id}
-							className={cn(
-								'h-16 px-4 border-r-[1px] border-t-[1px] border-primary/50  hover:cursor-pointer  relative',
-								spot.available &&
-									!spot.selected &&
-									'hover:from-primary/40 bg-gradient-to-l from-primary/15',
-								spot.selected && ' bg-gradient-to-l from-blue-500/20',
-								!spot.available &&
-									'hover:cursor-not-allowed [background-image:repeating-linear-gradient(45deg,_rgba(128,128,128,0.3)_0,_rgba(128,128,128,0.3)_10px,_rgba(64,64,64,0.5)_10px,_rgba(64,64,64,0.5)_20px)]'
-							)}
-							onClick={() => {
-								toggleSelection(sectionIndex, spot.id);
-							}}>
-							{spot.selected && (
-								<span
-									className={
-										'flex text-xs items-center justify-center gap-2 py-2 px-3 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500 '
-									}>
-									<FaCheckCircle />
-									Selected
-								</span>
-							)}
-							{!spot.selected && spot.available && (
-								<span>
-									<span className='text-xs text-foreground/50 absolute bottom-1 right-1 '>
-										{section.name}
-										{spot.id}
-									</span>
-									<span className='text-xs text-foreground/50 absolute top-1/2 left-1/2  -translate-x-1/2 -translate-y-1/2'>
-										Available
-									</span>
-								</span>
-							)}
-							{!spot.available && (
-								<div className='flex items-center gap-4 -translate-y-[0.5rem]'>
-									<TbLockSquareRoundedFilled className='text-muted-foreground/70 size-7' />
-									<img
-										src='/cars/car-top-view-red.png'
-										alt='car'
-										className={cn('size-20 object-contain rotate-90 filter grayscale')}
-									/>
-								</div>
-							)}
-						</div>
-					))}
-				</div>
-				<div className='flex flex-col '>
-					{section.spots.slice(section.spots.length / 2, section.spots.length).map((spot: any) => (
-						<div
-							key={spot.id}
-							className={cn(
-								'h-16 px-4 border-t-[1px] border-primary/50  hover:cursor-pointer  relative',
-								spot.available &&
-									!spot.selected &&
-									'hover:from-primary/40 bg-gradient-to-r from-primary/15',
-								spot.selected && ' bg-gradient-to-l from-blue-500/20',
-								!spot.available &&
-									'hover:cursor-not-allowed [background-image:repeating-linear-gradient(45deg,_rgba(128,128,128,0.3)_0,_rgba(128,128,128,0.3)_10px,_rgba(64,64,64,0.5)_10px,_rgba(64,64,64,0.5)_20px)]'
-							)}
-							onClick={() => toggleSelection(sectionIndex, spot.id)}>
-							{spot.selected && (
-								<span
-									className={
-										'flex text-xs items-center justify-center gap-2 py-2 px-3 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500 '
-									}>
-									<FaCheckCircle />
-									Selected
-								</span>
-							)}
-							{!spot.selected && spot.available && (
-								<span>
-									<span className='text-xs text-foreground/50 absolute bottom-1 right-1 '>
-										{section.name}
-										{spot.id}
-									</span>
-									<span className='text-xs text-foreground/50 absolute top-1/2 left-1/2  -translate-x-1/2 -translate-y-1/2'>
-										Available
-									</span>
-								</span>
-							)}
-							{!spot.available && (
-								<div className='flex items-center gap-4 -translate-y-[0.5rem]'>
-									<TbLockSquareRoundedFilled className='text-muted-foreground/70 size-7' />
-									<img
-										src='/cars/car-top-view-red.png'
-										alt='car'
-										className={cn('size-20 object-contain rotate-90 filter grayscale')}
-									/>
-								</div>
-							)}
-						</div>
-					))}
-				</div>
-			</div>
-		</div>
+		Object.entries(sectionsMap)
+			.map(([name, spots]) => ({
+				name,
+				spots
+			}))
+			.sort((a, b) => a.name.localeCompare(b.name))
+			//temp demo
+			.map((section, i) => ({
+				...section,
+				spots: section.spots.map((spot, j) => ({
+					...spot,
+					isBooked: j == 0 || j == section.spots.length - 1 ? true : spot.isBooked
+				}))
+			}))
 	);
 };
 
 const ParkingSpotChooser = () => {
 	const form = useFormContext<BookingsFormSchemaType>();
-	const [sections, setSections] = useState([
-		{
-			name: 'A',
-			spots: [
-				{ id: 1, available: true, selected: false },
-				{ id: 2, available: true, selected: false },
-				{ id: 3, available: false, selected: false },
-				{ id: 4, available: true, selected: false },
-				{ id: 5, available: true, selected: false },
-				{ id: 6, available: true, selected: false },
-				{ id: 7, available: false, selected: false },
-				{ id: 8, available: true, selected: false }
-			]
+	const startDate = form.watch('startTime');
+	const endDate = form.watch('endTime');
+	const parkingLotId = form.watch('parkingLotId');
+	const vehicleType = form.watch('vehicleType');
+
+	const { sections, setSections, toggleSelection, updateVehicleType } = useParkingStore();
+
+	const mutation = useMutation<ParkingSpacesResponse, AxiosErrorType, ParkingSpacesRequestBody>({
+		mutationFn: api.ParkingSpaces.getParkingSpaces,
+		onSuccess: (data) => {
+			setSections(transformSpots(data, vehicleType));
 		},
-		{
-			name: 'B',
-			spots: [
-				{ id: 1, available: false, selected: false },
-				{ id: 2, available: true, selected: false },
-				{ id: 3, available: true, selected: false },
-				{ id: 4, available: false, selected: false },
-				{ id: 5, available: true, selected: false },
-				{ id: 6, available: true, selected: false },
-				{ id: 7, available: false, selected: false },
-				{ id: 8, available: true, selected: false }
-			]
+		onError: (error) => {
+			const err = HandleAxiosError.process(error);
+			toast.error(err.message);
 		}
-	]);
+	});
 
-	const toggleSelection = (sectionIndex: number, spotId: number) => {
-		form.setValue('spotNo', spotId, { shouldValidate: true });
-		form.setValue('section', sections[sectionIndex].name as 'A' | 'B', { shouldValidate: true });
-
-		setSections((prevSections) => {
-			return prevSections.map((section, sIndex) => {
-				if (sIndex === sectionIndex) {
-					return {
-						...section,
-						spots: section.spots.map((spot) => ({
-							...spot,
-							selected: spot.id === spotId && spot.available ? true : false
-						}))
-					};
-				}
-				return {
-					...section,
-					spots: section.spots.map((spot) => ({
-						...spot,
-						selected: false
-					}))
-				};
-			});
+	useEffect(() => {
+		mutation.mutate({
+			parkingLotId,
+			startDate: startDate.toISOString(),
+			endDate: endDate.toISOString()
 		});
-	};
+	}, [startDate, endDate]);
+
+	useEffect(() => {
+		updateVehicleType(vehicleType);
+	}, [vehicleType]);
+
+	if (mutation.isPending) return <ParkingSectionLoaderSkeleton />;
 
 	return (
 		<FormField
 			control={form.control}
-			name='section'
+			name='parkingSpotId'
 			render={() => (
 				<FormItem>
 					<div className='mb-4'>
@@ -205,11 +94,11 @@ const ParkingSpotChooser = () => {
 						<FormMessage />
 						<FormDescription>Select vehicle types you want to filter</FormDescription>
 					</div>
-					<div className='flex flex-row justify-center gap-5'>
+					<div className='flex flex-row gap-5'>
 						{sections.map((section, index) => (
 							<>
 								<ParkingSection
-									key={section.name}
+									key={index}
 									section={section}
 									sectionIndex={index}
 									toggleSelection={toggleSelection}

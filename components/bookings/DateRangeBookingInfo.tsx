@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useWatch } from 'react-hook-form';
 import { PiArrowCircleRightFill } from 'react-icons/pi';
 import { EndDateTimeForm, StartDateTimeForm } from './BookingDateTime';
+import { cn } from '@/lib/utils';
 export interface IDateRangeBookingInfoProps {
 	startTime?: string;
 	endTime?: string;
@@ -38,7 +39,11 @@ export const DateRangeBookingInfo = () => {
 				<StartDateTimeForm />
 				<div className='flex flex-col items-center space-y-2'>
 					<PiArrowCircleRightFill className='text-muted-foreground size-4' />
-					<div className='-mt-1 text-xs text-center text-muted-foreground'>
+					<div
+						className={cn(
+							'-mt-1 text-xs text-center text-muted-foreground',
+							duration == 'Invalid date range' && 'text-red-500'
+						)}>
 						{duration ? duration : 'Select date'}
 					</div>
 				</div>

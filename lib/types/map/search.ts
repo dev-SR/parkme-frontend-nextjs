@@ -1,5 +1,3 @@
-import { FilterLocationFormSchemaType } from '@/lib/schema';
-
 export type SearchBoxSuggestions = {
 	mapbox_id: string; //'dXJuOm1ieHBsYzpCQW9V';
 	name: string; //'Dhaka Kotwali Thana';
@@ -35,20 +33,12 @@ export type FindNeaByParkingLotsRequestBody = {
 	pricePerHourRange: number[];
 };
 
-export type ParkingSpaces = {
-	id: string;
-	sectionName: string;
-	vehicleType: string;
-	pricePerHour: number;
-};
-
 export type ParkingLotsDto = {
 	id: string;
 	name: string;
 	address: string;
 	latitude: number;
 	longitude: number;
-	parkingSpaces: ParkingSpaces[];
 };
 
 export type FindNeaByParkingLotsResponse = ParkingLotsDto[];

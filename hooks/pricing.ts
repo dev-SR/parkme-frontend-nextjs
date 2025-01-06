@@ -11,7 +11,7 @@ export type TotalPriceType = {
 export const useTotalPrice = ({ pricePerHour }: TotalPriceType) => {
 	const { startTime, endTime } = useWatch<BookingsFormSchemaType>();
 	const form = useFormContext<BookingsFormSchemaType>();
-	console.log(form.formState.errors);
+	// console.log(form.formState.errors);
 
 	const [parkingCharge, setParkingCharge] = useState(0);
 	// const [valetChargePickup, setValetChargePickup] = useState(0);
@@ -39,6 +39,7 @@ export const useTotalPrice = ({ pricePerHour }: TotalPriceType) => {
 	}, [pricePerHour, startTime, endTime]);
 
 	return {
-		parkingCharge
+		parkingCharge,
+		totalPrice: parkingCharge
 	};
 };

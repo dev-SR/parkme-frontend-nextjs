@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { LoginRequest, LoginResponse } from './types/auth/login';
-import { FilterLocationFormSchemaType } from './schema';
 import { FindNeaByParkingLotsRequestBody, FindNeaByParkingLotsResponse } from './types/map/search';
+import { ParkingSpacesRequestBody, ParkingSpacesResponse } from './types/map/parking';
 
 const axiosBaseToApi = axios.create({
 	baseURL: process.env.NEXT_PUBLIC_BASE_URL,
@@ -70,9 +70,27 @@ const ParkingLots = {
 		toBackend.post<FindNeaByParkingLotsResponse>('/api/parking-lot/search', values)
 };
 
+const ParkingSpaces = {
+	getParkingSpaces: (values: ParkingSpacesRequestBody) => {
+		const id = values.parkingLotId;
+		return toApiRoute.post<ParkingSpacesResponse>(`/api/parking-lot/${id}/parking-spaces`, {
+			startDate: values.startDate,
+			endDate: values.endDate
+		});
+	},
+	_getParkingSpaces: (values: ParkingSpacesRequestBody) => {
+		const id = values.parkingLotId;
+		return toBackend.post<ParkingSpacesResponse>(`/api/parking-lot/${id}/parking-spaces`, {
+			startDate: values.startDate,
+			endDate: values.endDate
+		});
+	}
+};
+
 const api = {
 	Auth,
-	ParkingLots
+	ParkingLots,
+	ParkingSpaces
 };
 
 export default api;

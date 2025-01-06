@@ -3,7 +3,6 @@ import useSupercluster from 'use-supercluster';
 import { Marker, useMap } from 'react-map-gl';
 import { INITIAL_VIEW_STATE } from '@/lib/constants';
 import { useParkingMarkerData } from '@/hooks/map/useParkingMarkerData';
-import { toast } from 'sonner';
 import { FaSquareParking } from 'react-icons/fa6';
 import {
 	Dialog,
@@ -13,25 +12,14 @@ import {
 	DialogTitle,
 	DialogTrigger
 } from '@/components/ui/dialog';
-import { Card, CardContent } from '@/components/ui/card';
-import {
-	Carousel,
-	CarouselContent,
-	CarouselItem,
-	CarouselPrevious,
-	CarouselNext
-} from '@/components/ui/carousel';
 import ImagePreviews from '@/components/bookings/ImagePreviews';
 import BookingFormProvider from '@/components/bookings/BookingFormProvider';
-import { PhoneNumberInput, VehicleNumberPalateInput } from '@/components/bookings/BookingsInputs';
 import { DateRangeBookingInfo } from '@/components/bookings/DateRangeBookingInfo';
 import ParkingSpotChooser from '@/components/bookings/ParkingSpotChooser';
 import VehicleTypeRadioSelect from '@/components/bookings/VehicleTypeRadioSelect';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ParkingLotsDto } from '@/lib/types/map/search';
-import DumpFromData from '@/components/bookings/DumpFromData';
-import { Separator } from '@/components/ui/separator';
 import PricingDetails from '@/components/bookings/PricingDetails';
 import { BookingsFormSchemaType } from '@/lib/schema';
 import { useWatch } from 'react-hook-form';
@@ -137,12 +125,9 @@ const ShowParkingMarkers = () => {
 							<div className='flex flex-col items-center'>
 								<ImagePreviews />
 							</div>
-
 							<ParkingSpotChooser />
 							<DateRangeBookingInfo />
-
 							<VehicleTypeRadioSelect />
-
 							<PricingDetails />
 							<Button type='submit' className='w-full'>
 								Book Now

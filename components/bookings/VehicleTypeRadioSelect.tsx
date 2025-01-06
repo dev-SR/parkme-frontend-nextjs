@@ -1,22 +1,16 @@
 'use client';
 import { FaCar, FaMotorcycle, FaTruck, FaBus, FaBicycle } from 'react-icons/fa';
 import { useFormContext } from 'react-hook-form';
-import {
-	FormControl,
-	FormDescription,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage
-} from '@/components/ui/form';
+import { FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { cn } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
 
-import { BookingsFormSchemaType, FilterLocationFormSchemaType } from '@/lib/schema';
+import { BookingsFormSchemaType } from '@/lib/schema';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { RadioGroup } from '@/components/ui/radio-group';
+import { useParkingStore } from '@/stores/bookingStore';
 
-const vehicleType = [
+const vehicleTypes = [
 	{
 		value: 'CAR',
 		icon: <FaCar className='size-8' />
@@ -41,11 +35,16 @@ const vehicleType = [
 
 const VehicleTypeRadioSelect = () => {
 	const form = useFormContext<BookingsFormSchemaType>();
-	// const watched = useWatch({
-	// 	// control: form.control, //control is optional as we are inside form context
-	// 	name: 'vehicleTypes'
-	// });
-	// console.log(watched);
+	const { getUniqueVehicleTypes } = useParkingStore();
+
+	// Fetch the unique vehicle types from the store
+	const uniqueVehicleTypes = getUniqueVehicleTypes();
+
+	// Filter the vehicleType array to only include unique vehicle types
+	const filteredVehicleTypes = uniqueVehicleTypes.length
+		? vehicleTypes.filter((item) => uniqueVehicleTypes.includes(item.value))
+		: vehicleTypes;
+
 	return (
 		<FormField
 			control={form.control}
@@ -57,42 +56,40 @@ const VehicleTypeRadioSelect = () => {
 						<FormDescription>Select vehicle types you want to filter</FormDescription>
 					</div>
 					<div className='flex flex-row vehicleTypes-start'>
-						{vehicleType.map((item) => (
+						{filteredVehicleTypes.map((item) => (
 							<FormField
 								key={item.value}
 								control={form.control}
 								name='vehicleType'
-								render={({ field }) => {
-									return (
-										<RadioGroup
-											onValueChange={field.onChange}
-											defaultValue={field.value}
-											className='flex flex-col space-y-1'>
-											<FormItem className='flex items-center space-x-3 space-y-0'>
-												<FormLabel className='font-normal'>
-													<TooltipProvider>
-														<Tooltip>
-															<TooltipTrigger>
-																<Card
-																	key={item.value}
-																	className={cn(
-																		'text-primary border-2 rounded-none cursor-pointer hover:bg-accent p-0',
-																		field.value?.includes(item.value) && ' border-primary'
-																	)}
-																	onClick={() => {
-																		field.onChange(item.value);
-																	}}>
-																	<CardContent className='p-2'>{item.icon}</CardContent>
-																</Card>
-															</TooltipTrigger>
-															<TooltipContent>{item.value}</TooltipContent>
-														</Tooltip>
-													</TooltipProvider>
-												</FormLabel>
-											</FormItem>
-										</RadioGroup>
-									);
-								}}
+								render={({ field }) => (
+									<RadioGroup
+										onValueChange={field.onChange}
+										defaultValue={field.value}
+										className='flex flex-col space-y-1'>
+										<FormItem className='flex items-center space-x-3 space-y-0'>
+											<FormLabel className='font-normal'>
+												<TooltipProvider>
+													<Tooltip>
+														<TooltipTrigger>
+															<Card
+																key={item.value}
+																className={cn(
+																	'text-primary border-2 rounded-none cursor-pointer hover:bg-accent p-0',
+																	field.value?.includes(item.value) && 'border-primary'
+																)}
+																onClick={() => {
+																	field.onChange(item.value);
+																}}>
+																<CardContent className='p-2'>{item.icon}</CardContent>
+															</Card>
+														</TooltipTrigger>
+														<TooltipContent>{item.value}</TooltipContent>
+													</Tooltip>
+												</TooltipProvider>
+											</FormLabel>
+										</FormItem>
+									</RadioGroup>
+								)}
 							/>
 						))}
 					</div>
@@ -104,9 +101,3 @@ const VehicleTypeRadioSelect = () => {
 };
 
 export default VehicleTypeRadioSelect;
-/* 
-
-
-										
-										
-*/

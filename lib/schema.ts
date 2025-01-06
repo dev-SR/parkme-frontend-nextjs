@@ -57,10 +57,7 @@ export const FilterParkingsFormSchema = z
 export const BookingsFormSchema = z
 	.object({
 		parkingLotId: z.string(),
-		section: z.enum(['A', 'B'], {
-			required_error: 'Section is required'
-		}),
-		spotNo: z.coerce.number(),
+		parkingSpotId: z.string(),
 		startTime: z.date({
 			required_error: 'Start time is required'
 		}),
@@ -82,6 +79,11 @@ export const BookingsFormSchema = z
 		message: 'End time should be greater than start time',
 		path: ['endTime']
 	});
+
+export const PayNowPartialFormSchema = z.object({
+	vehicleNumber: z.string().min(5, { message: 'Vehicle number is required' }),
+	phoneNumber: z.string().length(13, { message: 'Invalid phone number' })
+});
 
 export type LoginSchemaType = z.infer<typeof LoginSchema>;
 export type RegisterSchemaType = z.infer<typeof RegisterSchema>;

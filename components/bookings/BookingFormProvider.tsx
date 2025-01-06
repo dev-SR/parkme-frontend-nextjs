@@ -26,20 +26,14 @@ const BookingFormProvider = ({
 	const router = useRouter();
 
 	function onSubmit(data: BookingsFormSchemaType) {
-		const section = data.section;
-		const spotNo = data.spotNo;
 		const parkingLotId = data.parkingLotId;
+		const parkingSpotId = data.parkingSpotId;
 		const startTime = data.startTime;
 		const endTime = data.endTime;
 		const vehicleType = data.vehicleType;
-		toast(
-			<pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
-				<code className='text-white'>{JSON.stringify(data, null, 2)}</code>
-			</pre>
-		);
 
 		router.push(
-			`/bookings/${parkingLotId}?section=${section}&spotNo=${spotNo}&startTime=${startTime.toISOString()}&endTime=${endTime.toISOString()}&vehicleType=${vehicleType}`
+			`/bookings/${parkingLotId}?spotId=${parkingSpotId}&startTime=${startTime.toISOString()}&endTime=${endTime.toISOString()}&vehicleType=${vehicleType}`
 		);
 	}
 	return (

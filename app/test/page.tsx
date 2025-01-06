@@ -15,8 +15,6 @@ import BookingFormProvider from '@/components/bookings/BookingFormProvider';
 import { DateRangeBookingInfo } from '@/components/bookings/DateRangeBookingInfo';
 import ParkingSpotChooser from '@/components/bookings/ParkingSpotChooser';
 import VehicleTypeRadioSelect from '@/components/bookings/VehicleTypeRadioSelect';
-import { PhoneNumberInput, VehicleNumberPalateInput } from '@/components/bookings/BookingsInputs';
-import { Separator } from '@/components/ui/separator';
 import PricingDetails from '@/components/bookings/PricingDetails';
 import DumpFromData from '@/components/bookings/DumpFromData';
 
@@ -39,7 +37,7 @@ const TestModal = () => {
 						defaultValues={{
 							startTime: new Date(),
 							endTime: new Date(new Date().getTime() + 60 * 60 * 1000),
-							parkingLotId: 'asffdsfs1'
+							parkingLotId: '0ADA6BC9-6665-49B2-A427-5AD008B51FDA'
 						}}>
 						<div className='flex flex-col items-center'>
 							<ImagePreviews />

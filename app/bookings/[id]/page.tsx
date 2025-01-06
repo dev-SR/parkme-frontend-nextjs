@@ -1,22 +1,27 @@
 'use client';
 
-import { useParams, usePathname, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { toast } from 'sonner';
 
 const BookingStep = () => {
-	const pathname = usePathname();
-	const { id } = useParams();
 	const searchParams = useSearchParams();
-	const section = searchParams.get('section') || '';
-	const spotNo = searchParams.get('spotNo') || '';
+	const router = useRouter();
+
+	const { id: parkingLotId } = useParams();
+	const parkingSpotId = searchParams.get('spotId') || '';
 	const startTime = searchParams.get('startTime') || '';
 	const endTime = searchParams.get('endTime') || '';
 	const vehicleType = searchParams.get('vehicleType') || '';
 
+	if (!parkingSpotId || !startTime || !endTime || !vehicleType) {
+		toast.error('Missing required parameters');
+		router.push('/bookings');
+	}
+
 	return (
 		<div className=''>
-			<p>parking_lot ID: {id}</p>
-			<p>Section: {section}</p>
-			<p>Spot No: {spotNo}</p>
+			<p>parkingLotId: {parkingLotId}</p>
+			<p>parkingSpotId: {parkingSpotId}</p>
 			<p>Start Time: {startTime}</p>
 			<p>End Time: {endTime}</p>
 			<p>Vehicle Type: {vehicleType}</p>
