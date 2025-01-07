@@ -63,6 +63,16 @@ const BookingPaymentSummary = () => {
 			toast.error(err.message);
 		}
 	});
+
+	if (!user) {
+		console.log('User not found');
+		router.push('/auth/login');
+	}
+	if (!bookingDetails || bookingDetails.parkingLotId !== parkingLotId) {
+		clearBookingDetails();
+		router.push('/');
+	}
+
 	async function onSubmit(values: PayNowPartialFormSchemaType) {
 		// mutation.mutate(values);
 		const bookingData = {
@@ -73,14 +83,7 @@ const BookingPaymentSummary = () => {
 
 		toast.info(JSON.stringify(bookingData, null, 2));
 	}
-	if (!user) {
-		console.log('User not found');
-		router.push('/auth/login');
-	}
-	if (!bookingDetails || bookingDetails.parkingLotId !== parkingLotId) {
-		clearBookingDetails();
-		router.push('/bookings');
-	}
+
 	return (
 		<div className='space-y-4 flex min-h-svh  mx-auto flex-col mt-6 relative w-4/5 sm:w-3/5 md:sm:w-2/5'>
 			<Card className='p-0'>

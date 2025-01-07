@@ -52,7 +52,7 @@ const BookingFormProvider = ({
 			parkingAddress: parkingAddress || ''
 		});
 
-		router.push(`/bookings/${parkingLotId}`);
+		router.push(`/book/${parkingLotId}`);
 	}
 	return (
 		<Form {...form}>
