@@ -1,7 +1,7 @@
 import api from '@/lib/axiosApi';
 import { ParkingSpacesRequestBody } from '@/lib/types/map/parking';
 import { NextRequest, NextResponse } from 'next/server';
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
 	try {
 		const reqBody = (await req.json()) as ParkingSpacesRequestBody;
 		const id = (await params).id;
