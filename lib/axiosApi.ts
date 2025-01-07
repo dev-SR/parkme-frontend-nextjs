@@ -3,6 +3,8 @@ import { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from '
 import { FindNeaByParkingLotsRequestBody, FindNeaByParkingLotsResponse } from './types/map/search';
 import { ParkingSpacesRequestBody, ParkingSpacesResponse } from './types/map/parking';
 import { User } from '@/stores/userStore';
+import { CreateCheckoutSessionReqBody } from './schema';
+import { CreateCheckoutSessionResponse } from './types/book/CreateSession';
 
 const axiosBaseToApi = axios.create({
 	baseURL: process.env.NEXT_PUBLIC_BASE_URL,
@@ -91,10 +93,16 @@ const ParkingSpaces = {
 	}
 };
 
+const Book = {
+	createCheckoutSession: (values: CreateCheckoutSessionReqBody) =>
+		toApiRoute.post<CreateCheckoutSessionResponse>('/api/book/create-checkout-session', values)
+};
+
 const api = {
 	Auth,
 	ParkingLots,
-	ParkingSpaces
+	ParkingSpaces,
+	Book
 };
 
 export default api;

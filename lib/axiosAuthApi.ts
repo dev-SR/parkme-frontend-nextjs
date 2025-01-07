@@ -3,6 +3,8 @@ import { LoginResponse } from './types/auth/login';
 import { getSession } from './session';
 import { Token } from './types/auth/token';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
+import { CreateCheckoutSessionReqBody } from './schema';
+import { CreateCheckoutSessionResponse } from './types/book/CreateSession';
 
 const axiosBase = axios.create({
 	baseURL: process.env.BACKEND_URL,
@@ -102,9 +104,17 @@ const toBackendWithAuth = {
 const Auth = {
 	_getCurrentUser: () => toBackendWithAuth.get<LoginResponse>('/api/auth/current-user')
 };
+const Book = {
+	_createCheckoutSession: (values: CreateCheckoutSessionReqBody) =>
+		toBackendWithAuth.post<CreateCheckoutSessionResponse>(
+			'/api/book/create-checkout-session',
+			values
+		)
+};
 
 const authApi = {
-	Auth
+	Auth,
+	Book
 };
 
 export default authApi;

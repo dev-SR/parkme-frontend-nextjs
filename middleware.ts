@@ -35,7 +35,7 @@ export default async function middleware(request: NextRequest) {
 	// For all other routes (protected by default)
 	if (!userLoggedIn) {
 		// Deny access and redirect to login if not logged in
-		if (pathname.startsWith('/bookings')) {
+		if (pathname.startsWith('/book')) {
 			const redirectTo = `/auth/login?redirect=${pathname}?${searchParams.toString()}`;
 			return NextResponse.redirect(new URL(redirectTo, request.nextUrl));
 		}

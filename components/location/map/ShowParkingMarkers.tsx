@@ -17,7 +17,6 @@ import BookingFormProvider from '@/components/bookings/BookingFormProvider';
 import { DateRangeBookingInfo } from '@/components/bookings/DateRangeBookingInfo';
 import ParkingSpotChooser from '@/components/bookings/ParkingSpotChooser';
 import VehicleTypeRadioSelect from '@/components/bookings/VehicleTypeRadioSelect';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ParkingLotsDto } from '@/lib/types/map/search';
 import PricingDetails from '@/components/bookings/PricingDetails';

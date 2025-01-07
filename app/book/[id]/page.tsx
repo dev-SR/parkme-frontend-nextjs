@@ -9,8 +9,13 @@ import { Separator } from '@/components/ui/separator';
 import useSession from '@/hooks/useSession';
 import api from '@/lib/axiosApi';
 import { formatDate2 } from '@/lib/date-utils';
-import { PayNowPartialFormSchema, PayNowPartialFormSchemaType } from '@/lib/schema';
+import {
+	CreateCheckoutSessionReqBody,
+	PayNowPartialFormSchema,
+	PayNowPartialFormSchemaType
+} from '@/lib/schema';
 import { LoginResponse, LoginRequest } from '@/lib/types/auth/login';
+import { CreateCheckoutSessionResponse } from '@/lib/types/book/CreateSession';
 import { AxiosErrorType, HandleAxiosError } from '@/lib/types/error/process-axios-error';
 import { useBookingDetailsStore } from '@/stores/bookingDetailsStore';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -51,10 +56,14 @@ const BookingPaymentSummary = () => {
 		}
 	});
 
-	const mutation = useMutation<LoginResponse, AxiosErrorType, LoginRequest>({
-		mutationFn: api.Auth.login,
+	const mutation = useMutation<
+		CreateCheckoutSessionResponse,
+		AxiosErrorType,
+		CreateCheckoutSessionReqBody
+	>({
+		mutationFn: api.Book.createCheckoutSession,
 		onSuccess: (res) => {
-			router.push('checkoutsession');
+			router.push(res.redirectUrl);
 			clearBookingDetails();
 		},
 		onError: (error) => {
@@ -64,26 +73,26 @@ const BookingPaymentSummary = () => {
 		}
 	});
 
+	async function onSubmit(values: PayNowPartialFormSchemaType) {
+		if (bookingDetails) {
+			const bookingData = {
+				phoneNumber: values.phoneNumber,
+				vehicleNumber: values.vehicleNumber,
+				parkingSpotId: bookingDetails.parkingSpotId,
+				startTime: bookingDetails.startTime,
+				endTime: bookingDetails.endTime
+			};
+			mutation.mutate(bookingData);
+		}
+	}
 	if (!user) {
 		console.log('User not found');
 		router.push('/auth/login');
 	}
-	if (!bookingDetails || bookingDetails.parkingLotId !== parkingLotId) {
-		clearBookingDetails();
-		router.push('/');
-	}
-
-	async function onSubmit(values: PayNowPartialFormSchemaType) {
-		// mutation.mutate(values);
-		const bookingData = {
-			...bookingDetails,
-			phoneNumber: values.phoneNumber,
-			vehicleNumber: values.vehicleNumber
-		};
-
-		toast.info(JSON.stringify(bookingData, null, 2));
-	}
-
+	// if (!bookingDetails || bookingDetails.parkingLotId !== parkingLotId) {
+	// 	clearBookingDetails();
+	// 	router.push('/');
+	// }
 	return (
 		<div className='space-y-4 flex min-h-svh  mx-auto flex-col mt-6 relative w-4/5 sm:w-3/5 md:sm:w-2/5'>
 			<Card className='p-0'>

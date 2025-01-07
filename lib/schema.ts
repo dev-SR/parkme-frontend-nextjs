@@ -87,8 +87,20 @@ export const PayNowPartialFormSchema = z.object({
 	phoneNumber: z.string().length(14, { message: 'Invalid phone number' })
 });
 
+export const CreateCheckoutSessionSchema = z.object({
+	parkingSpotId: z.string().nonempty('Parking spot ID is required.'),
+	startTime: z.string().nonempty('Start time is required.'),
+	endTime: z.string().nonempty('End time is required.'),
+	phoneNumber: z
+		.string()
+		.nonempty('Phone number is required.')
+		.regex(/^\+?[0-9]{10,15}$/, 'Invalid phone number format.'),
+	vehicleNumber: z.string().nonempty('Vehicle number is required.')
+});
+
 export type LoginSchemaType = z.infer<typeof LoginSchema>;
 export type RegisterSchemaType = z.infer<typeof RegisterSchema>;
 export type FilterParkingsFormSchemaType = z.infer<typeof FilterParkingsFormSchema>;
 export type BookingsFormSchemaType = z.infer<typeof BookingsFormSchema>;
 export type PayNowPartialFormSchemaType = z.infer<typeof PayNowPartialFormSchema>;
+export type CreateCheckoutSessionReqBody = z.infer<typeof CreateCheckoutSessionSchema>;
